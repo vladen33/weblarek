@@ -1,49 +1,49 @@
-import {ICustomer, IProduct} from '../../types/index';
+import {IProduct} from '../../types/index';
 
 
-class Product implements IProduct {   
-    id: string;
-    description: string;
-    image: string;
-    title: string;
-    category: string;
-    price: number | null;
+// class Product implements IProduct {   
+//     id: string;
+//     description: string;
+//     image: string;
+//     title: string;
+//     category: string;
+//     price: number | null;
 
-    constructor(id: string, description: string, image: string, title: string, category: string, price=null) {
-        this.id = id;
-        this.description = description;
-        this.image = image;
-        this.title = title;
-        this.category = category;
-        this.price = price;
-    }
+//     constructor(id: string, description: string, image: string, title: string, category: string, price=null) {
+//         this.id = id;
+//         this.description = description;
+//         this.image = image;
+//         this.title = title;
+//         this.category = category;
+//         this.price = price;
+//     }
     
-}
+// }
 
-class ProductList {
-    _productList: Product[];
-    _selectedProduct: Product | null;
+export class ProductList {
+    _productList: IProduct[];
+    _selectedProduct: IProduct | null;
     constructor() {
         this._productList = [];
         this._selectedProduct = null;
     }
-    setProductList(arr: Product[]): void {
+    setProductList(arr: IProduct[]): void {
         this._productList = arr;
     }
-    getProductList(): Product[] {
+    getProductList(): IProduct[] {
         return this._productList;
     }
-    getProductById(id: string): Product {
+    getProductById(id: string): IProduct {
         try {
             return this._productList.filter(prod => prod.id === id)[0];
         } catch (e) {
-            throw new Error(`При получении протукта из каталога по идентификатору возникла ошибка ${e}`)
+            throw new Error(`При получении продукта из каталога по идентификатору возникла ошибка ${e}`)
         }
     }
-    setSelectedProduct(prod: Product): void {
+    setSelectedProduct(prod: IProduct): void {
         this._selectedProduct = prod;
     }
-    getSelectedProduct(): Product | null {
+    getSelectedProduct(): IProduct | null {
         return this._selectedProduct;
     }
 
