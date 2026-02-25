@@ -1,16 +1,11 @@
 import {ICustomer, TPayment} from '../../types/index';
 
 export class Customer implements ICustomer {
-    payment: '' | 'card' | 'cash' = '';
+    payment: TPayment = '';
     address: string = '';
     email: string = '';
     phone: string = '';
-    constructor(payment: TPayment = '', address: string = '', email: string = '', phone: string = '') {
-        this.setPayment(payment);
-        this.setAddress(address);
-        this.setEmail(email);
-        this.setPhone(phone);
-    }
+
     setPayment(payment: TPayment): void {
         this.payment = payment;
     }
@@ -49,7 +44,7 @@ export class Customer implements ICustomer {
         this.setEmail('');
         this.setPhone('');
     }
-    validateFields() {
+    validateFields(): Record<string, string> {
         const errors: Record<string, string> = {};
         for (const key in this) {
             if (!Object.prototype.hasOwnProperty.call(this, key)) continue;
