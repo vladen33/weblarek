@@ -1,7 +1,7 @@
 import {IProduct} from '../../types/index';
 
 export class Cart {
-    prodList: IProduct[] = [];
+    protected prodList: IProduct[] = [];
 
     getProdListFromCart(): IProduct[] {
         return this.prodList;

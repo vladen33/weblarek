@@ -22,3 +22,8 @@ export interface ICustomer {
     email: string;
     phone: string;
 }
+
+export interface ICatalogRequest {
+    
+
+}
