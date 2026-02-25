@@ -23,7 +23,16 @@ export interface ICustomer {
     phone: string;
 }
 
-export interface ICatalogRequest {
-    
+export interface IOrderRequest {
+    payment: string,
+    email: string,
+    phone: string,
+    address: string,
+    total: number,
+    items: string[]
+}
 
+export interface IOrderResponse {
+    id: string,
+    total: number
 }

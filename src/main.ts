@@ -1,5 +1,5 @@
 import './scss/styles.scss';
-import {ApiPostMethods, IApi} from '../src/types/index';
+import {IApi, IOrderRequest, IOrderResponse, IProduct, ApiPostMethods} from '../src/types/index';
 import { API_URL } from '../src/utils/constants';
 import { Cart } from '../src/components/models/cart';
 import { Catalog } from '../src/components/models/catalog';
@@ -53,7 +53,6 @@ console.log('Объект с валидацией', customer.validateFields());
 customer.setAddress('Москва,...');
 customer.setPhone('+79001234567');
 console.log('Заполненный класс Customer', customer);
-
 console.log('Вывод всех полей:');
 console.log(customer.getPayment());
 console.log(customer.getEmail());
@@ -66,12 +65,40 @@ console.log('Вывод очищенного объекта:');
 console.log(customer.getAllFields())
 
 
-class AppApi extends Api {
-  api: IApi;
-  constructor(api: IApi) {
-    super(API_URL);
-    this.api = api;
+class MainApi extends Api {
+  constructor(baseApi: string) {
+    super(baseApi);
+  }
+  getCatalog(): Promise<IProduct[]> {
+    return this.get('/product/')
+  }
+  postOrder(orderData: IOrderRequest): Promise<IOrderResponse> {
+    const res = this.post('/order/', orderData, 'POST');
+    console.log('RES = ', res);
+    return res;
   }
 }
 
+const app = new MainApi(API_URL);
 
+console.log('Запрос и вывод каталога с сервера:');
+const products = await app.getCatalog().then((elem) => {return elem.items})
+console.log(products);
+
+console.log('Отправка заказа на сервер:');
+
+const requestBody = {
+    "payment": "online",
+    "email": "test@test.ru",
+    "phone": "+71234567890",
+    "address": "Spb Vosstania 1",
+    "total": 2200,
+    "items": [
+        "854cef69-976d-4c2a-a18c-2aa45046c390",
+        "c101ab44-ed99-4a54-990d-47aa2bb4e7d9"
+    ]
+}
+
+const response = await app.postOrder(requestBody);
+console.log('Ответ от сервера:');
+console.log(response);
