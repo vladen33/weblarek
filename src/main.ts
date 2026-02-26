@@ -1,11 +1,11 @@
 import './scss/styles.scss';
-import {IApi, IOrderRequest, IOrderResponse, IProduct, ApiPostMethods} from '../src/types/index';
+import { IOrderRequest, IOrderResponse, IProduct} from '../src/types/index';
 import { API_URL } from '../src/utils/constants';
 import { Cart } from '../src/components/models/cart';
 import { Catalog } from '../src/components/models/catalog';
 import { Customer } from '../src/components/models/customer';
 import { Api } from '../src/components/base/Api';
-import {apiProducts} from '../src/utils/data';
+import { apiProducts } from '../src/utils/data';
 
 
 const catalog = new Catalog();
@@ -66,23 +66,18 @@ console.log(customer.getAllFields())
 
 
 class MainApi extends Api {
-  constructor(baseApi: string) {
-    super(baseApi);
-  }
   getCatalog(): Promise<IProduct[]> {
     return this.get('/product/')
   }
   postOrder(orderData: IOrderRequest): Promise<IOrderResponse> {
-    const res = this.post('/order/', orderData, 'POST');
-    console.log('RES = ', res);
-    return res;
+    return this.post('/order/', orderData);
   }
 }
 
 const app = new MainApi(API_URL);
 
 console.log('Запрос и вывод каталога с сервера:');
-const products = await app.getCatalog().then((elem) => {return elem.items})
+const products = await app.getCatalog();
 console.log(products);
 
 console.log('Отправка заказа на сервер:');

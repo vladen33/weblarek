@@ -190,3 +190,32 @@ interface ICustomer {
 `validateFields(): Record<string, string>` - возвращает объект, в котором в качестве ключей - названия полей класса, в качестве их значений - тест ошибки
 
 ### Слой коммуникации
+
+#### Класс MainApi
+Класс MainApi предназначен для отправки и получения данных с сервера через API.
+
+Конструктор класса MainApi не принимает параметров.
+
+Методы класса:
+`getCatalog(): Promise<IProduct[]>` - запрашивает на сервере данные для заполнения каталога в приложении
+`postOrder(orderData: IOrderRequest): Promise<IOrderResponse>` - отправляет на сервер данные о покупателе
+
+Используемые интерфейсы:
+`IOrderRequest` - описыват структуру объекта, которой должен соответствовать отправляемый на сервер объект
+```
+export interface IOrderRequest { 
+    payment: string,
+    email: string,
+    phone: string,
+    address: string,
+    total: number,
+    items: string[]
+}
+```
+`IOrderResponse` - описыват структуру объекта, получаемого с сервера 
+```
+export interface IOrderResponse {
+    id: string,
+    total: number
+}
+```
