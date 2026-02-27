@@ -10,12 +10,8 @@ export class Catalog {
     getProductList(): IProduct[] {
         return this.productList;
     }
-    getProductById(id: string): IProduct {
-        try {
-            return this.productList.filter(prod => prod.id === id)[0];
-        } catch (e) {
-            throw new Error(`При получении продукта из каталога по идентификатору возникла ошибка ${e}`)
-        }
+    getProductById(id: string): IProduct | undefined {
+        return this.productList.find(prod => prod.id === id);
     }
     setSelectedProduct(prod: IProduct): void {
         this.selectedProduct = prod;

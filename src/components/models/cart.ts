@@ -16,12 +16,12 @@ export class Cart {
         this.prodList = [];
     }
     getFullPriceOfCart(): number {
-        return this.prodList.map(item => item.price).filter(price => price !== null).reduce((acc, price) => acc + price, 0);
+        return this.prodList.reduce((acc, item) => acc + (item.price ?? 0), 0);
     }
     getCountProdInCart(): number {
         return this.prodList.length;
     }
     isProdInCart(prod: IProduct): boolean {
-        return this.prodList.filter(item => item.id === prod.id).length > 0;
+        return this.prodList.some(item => item.id === prod.id);
     }
 }

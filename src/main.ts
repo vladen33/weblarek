@@ -1,52 +1,59 @@
 import './scss/styles.scss';
-import { IOrderRequest, IOrderResponse, IProduct} from '../src/types/index';
 import { API_URL } from '../src/utils/constants';
 import { Cart } from '../src/components/models/cart';
 import { Catalog } from '../src/components/models/catalog';
 import { Customer } from '../src/components/models/customer';
-import { Api } from '../src/components/base/Api';
+import { MainApi } from '../src/services/apiService';
 import { apiProducts } from '../src/utils/data';
 
 
 const catalog = new Catalog();
 const cart = new Cart();
 const customer = new Customer();
+const app = new MainApi(API_URL);
 
-console.log('Объект Catalog ', catalog);
-console.log('Объект Cart ', cart);
-console.log('Объект Customer ', customer);
 
 // Проверка работы класса Catalog
+console.log('1). Проверка класса Catalog');
+console.log('-');
+console.log('Объект Catalog ', catalog);
 catalog.setProductList(apiProducts.items);
 const prodList = catalog.getProductList();
 console.log('Сохраненный список товаров', prodList);
 const prodId1 = prodList[0].id;
 const prodId2 = prodList[1].id;
 console.log('id первого товара в списке', prodId1);
-console.log('id второго товара в списке', prodId1);
+console.log('id второго товара в списке', prodId2);
 const prod1 = catalog.getProductById(prodId1);
 const prod2 = catalog.getProductById(prodId2);
 console.log('Товар, найденный в сиске по id', prod1);
-catalog.setSelectedProduct(prod1);
+if (prod1) catalog.setSelectedProduct(prod1);
 const selected = catalog.getSelectedProduct();
 console.log('Выбранный товар', selected);
 
 // Проверка работы класса Cart
-cart.addProdToCart(prod1);
-cart.addProdToCart(prod2);
+console.log('-');
+console.log('2). Проверка класса Cart');
+console.log('-');
+console.log('Объект Cart ', cart);
+if (prod1) cart.addProdToCart(prod1);
+if (prod2) cart.addProdToCart(prod2);
 console.log('Список товаров в корзине: ', cart.getProdListFromCart());
 console.log('Количество товаров в корзине: ', cart.getCountProdInCart());
 console.log('Стоимость товаров в корзине: ', cart.getFullPriceOfCart());
-console.log(`Товар "${prod1.title}" в корзине? `, cart.isProdInCart(prod1));
-cart.removeProdFromCart(prod1);
-console.log(`Товар "${prod1.title}" удален из корзины`);
-console.log(`Товар "${prod1.title}" в корзине? `, cart.isProdInCart(prod1));
+if (prod1) console.log(`Товар "${prod1.title}" в корзине? `, cart.isProdInCart(prod1));
+if (prod1) cart.removeProdFromCart(prod1);
+if (prod1) console.log(`Товар "${prod1.title}" удален из корзины`);
+if (prod1) console.log(`Товар "${prod1.title}" в корзине? `, cart.isProdInCart(prod1));
 cart.clearCart();
 console.log(`Корзина очищена`);
 console.log('Количество товаров в корзине: ', cart.getCountProdInCart());
 
 // Проверка работы класса Customer
-console.log('Пустой класс Customer', customer);
+console.log('-');
+console.log('3). Проверка класса Customer');
+console.log('-');
+console.log('Пустой объект Customer', customer);
 customer.setPayment('cash');
 customer.setEmail('ivanov@mail.ru');
 console.log('Объект с валидацией', customer.validateFields());
@@ -64,20 +71,11 @@ customer.clearAllFields();
 console.log('Вывод очищенного объекта:');
 console.log(customer.getAllFields())
 
-
-class MainApi extends Api {
-  getCatalog(): Promise<IProduct[]> {
-    return this.get('/product/')
-  }
-  postOrder(orderData: IOrderRequest): Promise<IOrderResponse> {
-    return this.post('/order/', orderData);
-  }
-}
-
-const app = new MainApi(API_URL);
-
+console.log('-');
+console.log('4). Проверка связи с сервером');
+console.log('-');
 console.log('Запрос и вывод каталога с сервера:');
-const products = await app.getCatalog();
+const products = (await app.getCatalog()).items;
 console.log(products);
 
 console.log('Отправка заказа на сервер:');

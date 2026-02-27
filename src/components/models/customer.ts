@@ -46,14 +46,18 @@ export class Customer implements ICustomer {
     }
     validateFields(): Record<string, string> {
         const errors: Record<string, string> = {};
-        for (const key in this) {
-            if (!Object.prototype.hasOwnProperty.call(this, key)) continue;
-            const value = this[key as keyof this];
-            if (value === '') {
-                errors[key] = `Свойство "${key}" имеет пустое значение`;
-            }
+        if (this.payment === '') {
+            errors.payment = 'Не выбран тип платежа';
         }
+        if (this.address === '') {
+            errors.address = 'Не указан адрес доставки';
+        }
+        if (this.email === '') {
+            errors.email = 'Не указан адрес электронной почты';
+        }    
+        if (this.phone === '') {
+            errors.phone = 'Не указан контактный телефон';
+        }    
         return errors;
-    }
-    
+    }    
 }

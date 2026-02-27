@@ -36,3 +36,8 @@ export interface IOrderResponse {
     id: string,
     total: number
 }
+
+export interface ICatalogResponse {
+  total: number;
+  items: IProduct[];
+}
