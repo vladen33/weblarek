@@ -41,3 +41,7 @@ export interface ICatalogResponse {
   total: number;
   items: IProduct[];
 }
+
+export interface ICartCounter {
+    counter: number;
+}

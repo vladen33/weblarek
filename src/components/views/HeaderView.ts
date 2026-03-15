@@ -1,8 +1,9 @@
 import { Component } from '../base/Component.ts';
+import { ICartCounter } from '../../types/index.ts';
 
-export class Header<T> extends Component<T> {
+export class HeaderView extends Component<ICartCounter> {
     private basketButtonElement: HTMLButtonElement | null;
-    private basketCounterElement: HTMLSpanElement | null;
+    private basketCounterElement: HTMLElement | null;
 
     constructor(protected readonly container: HTMLElement) {
         super(container);
@@ -17,7 +18,5 @@ export class Header<T> extends Component<T> {
         }
     }
 
-    render(data?: Partial<T>): HTMLElement {
-        return super.render(data);
-    }
+
 }

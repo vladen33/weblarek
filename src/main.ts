@@ -5,7 +5,7 @@ import { Catalog } from './components/models/catalog.ts';
 import { Customer } from './components/models/customer.ts';
 import { MainApi } from './services/apiService.ts';
 import { apiProducts } from './utils/data.ts';
-import { Header } from './components/views/cartView.ts';
+import { HeaderView } from './components/views/HeaderView.ts';
 
 
 const catalogModel = new Catalog();
@@ -15,9 +15,9 @@ const app = new MainApi(API_URL);
 
 const headerElement: HTMLElement = document.querySelector('.header');
 const galleryElement = document.querySelector('.gallery');
-const headerView = new Header(headerElement);
+const headerView = new HeaderView(headerElement);
 
-if (false) {
+if (true) {
 
     // Проверка работы класса Catalog
     console.log('1). Проверка класса Catalog');
