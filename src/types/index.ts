@@ -38,10 +38,18 @@ export interface IOrderResponse {
 }
 
 export interface ICatalogResponse {
-  total: number;
-  items: IProduct[];
+    total: number;
+    items: IProduct[];
 }
 
 export interface ICartCounter {
     counter: number;
+}
+
+export interface IGalleryData {
+    catalog: HTMLElement[];
+}
+
+export interface IModalContent {
+    content: HTMLElement;
 }

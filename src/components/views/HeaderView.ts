@@ -12,7 +12,7 @@ export class HeaderView extends Component<ICartCounter> {
 
     }
 
-    setCounter(productCount: number) {
+    set counter(productCount: number) {
         if (this.basketCounterElement) {
             this.basketCounterElement.textContent = productCount.toString();
         }

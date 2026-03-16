@@ -1,6 +1,8 @@
 import { Component } from '../base/Component.ts';
+import { IGalleryData } from '../../types/index.ts';
 
-export class GalleryView extends Component<IGallery> {
+
+export class GalleryView extends Component<IGalleryData> {
   private catalogElement: HTMLElement | null;
   
   constructor(protected readonly container: HTMLElement) {
