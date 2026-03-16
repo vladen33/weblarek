@@ -16,6 +16,7 @@ const app = new MainApi(API_URL);
 const headerElement: HTMLElement = document.querySelector('.header');
 const galleryElement = document.querySelector('.gallery');
 const headerView = new HeaderView(headerElement);
+const res = catalogModel.getProductList()
 
 if (true) {
 
@@ -103,4 +104,5 @@ if (true) {
     console.log(response);
 }
 
-headerView.setCounter(5);
+headerView.counter = 55;
+// galleryElement.

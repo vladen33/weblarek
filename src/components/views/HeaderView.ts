@@ -1,15 +1,15 @@
 import { Component } from '../base/Component.ts';
-import { ICartCounter } from '../../types/index.ts';
+import { ICartCounter } from '../../types';
+import { ensureElement } from '../../utils/utils.ts';
 
 export class HeaderView extends Component<ICartCounter> {
-    private basketButtonElement: HTMLButtonElement | null;
-    private basketCounterElement: HTMLElement | null;
+    private basketCounterElement: HTMLElement;
+    private basketButtonElement: HTMLButtonElement;
 
     constructor(protected readonly container: HTMLElement) {
         super(container);
-        this.basketButtonElement = container.querySelector('.header__basket');
-        this.basketCounterElement = container.querySelector('.header__basket-counter');
-
+        this.basketCounterElement = ensureElement<HTMLElement>('.header__basket-counter', this.container);
+        this.basketButtonElement = ensureElement<HTMLButtonElement>('.header__basket', this.container);
     }
 
     set counter(productCount: number) {
