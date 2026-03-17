@@ -29,7 +29,7 @@ const modalElement: HTMLElement = ensureElement<HTMLElement>('.modal', document)
 
 // const res = catalogModel.getProductList()
 
-if (true) {
+if (false) {
 
     // Проверка работы класса Catalog
     console.log('1). Проверка класса Catalog');
@@ -116,6 +116,17 @@ if (true) {
 }
 
 headerView.counter = 55;
-const productList = catalogModel.getProductList().map((item) => {
-    const card = new CardCatalogView()
-})
+const cardCatalogTemplate: HTMLTemplateElement = ensureElement<HTMLTemplateElement>('#card-catalog');
+const cardCatalogElement: HTMLElement = cardCatalogTemplate.cloneNode(true).firstChild;
+const products = (await app.getCatalog()).items.map(item => {
+    const elem = new CardCatalogView(cardCatalogElement);
+    console.log(elem.render(item));
+    return elem.render(item);
+});
+console.log('products', products);
+// galleryView(products);
+//
+//
+// const productList = catalogModel.getProductList().map((item) => {
+//     const card = new CardCatalogView()
+// })

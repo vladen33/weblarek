@@ -6,7 +6,7 @@ export abstract class CardBaseView extends Component<T>{
     protected titleNode: HTMLElement;
     protected priceNode: HTMLElement;
 
-    constructor(container: HTMLElement) {
+    protected constructor(container: HTMLElement) {
         super(container);
         this.titleNode = ensureElement<HTMLElement>('.card .card__title');
         this.priceNode = ensureElement<HTMLElement>('.card .card__price');
