@@ -6,6 +6,7 @@ import { Customer } from './components/models/customer.ts';
 import { MainApi } from './services/apiService.ts';
 import { apiProducts } from './utils/data.ts';
 import { HeaderView } from './components/views/HeaderView.ts';
+import { ensureElement } from './utils/utils.ts';
 
 
 const catalogModel = new Catalog();
@@ -13,12 +14,15 @@ const cartModel = new Cart();
 const customerModel = new Customer();
 const app = new MainApi(API_URL);
 
-const headerElement: HTMLElement = document.querySelector('.header');
-const galleryElement = document.querySelector('.gallery');
-const headerView = new HeaderView(headerElement);
-const res = catalogModel.getProductList()
+const headerView = new HeaderView();
 
-if (true) {
+const headerElement: HTMLElement = ensureElement<HTMLElement>('.header', document);
+const galleryElement: HTMLElement = ensureElement<HTMLElement>('.gallery', document);
+const modalElement: HTMLElement = ensureElement<HTMLElement>('.modal', document);
+
+// const res = catalogModel.getProductList()
+
+if (false) {
 
     // Проверка работы класса Catalog
     console.log('1). Проверка класса Catalog');
@@ -105,4 +109,4 @@ if (true) {
 }
 
 headerView.counter = 55;
-// galleryElement.
+galleryElement.catalog = catalogModel.getProductList();
