@@ -1,8 +1,8 @@
 import {Component} from "../base/Component.ts";
 import { ensureElement } from '../../utils/utils.ts';
 
-export abstract class CardView extends Component<T>{
-    //protected id: string;
+
+export abstract class CardBaseView extends Component<T>{
     protected titleNode: HTMLElement;
     protected priceNode: HTMLElement;
 
@@ -12,27 +12,63 @@ export abstract class CardView extends Component<T>{
         this.priceNode = ensureElement<HTMLElement>('.card .card__price');
     }
 
-    set title(title:string) {
-        this.titleNode.textContent = title;
+    set title(titleValue: string) {
+        this.titleNode.textContent = titleValue;
     }
 
-    set price(price:string) {
-        if (price) {
-            this.priceNode.textContent = `${price} синапсов`;
+    set price(priceValue: string) {
+        if (priceValue) {
+            this.priceNode.textContent = `${priceValue} синапсов`;
         } else {
             this.priceNode.textContent = 'Бесценно';
         }
     }
 }
 
-export class CardCatalogView extends CardView{
 
+export class CardBasketView extends CardBaseView{
+    protected indexNode: HTMLElement;
+
+    constructor(container: HTMLElement) {
+        super(container);
+        this.indexNode = ensureElement<HTMLElement>('.card .basket__item-index');
+    }
+
+    set index(indexValue: string) {
+        this.indexNode.textContent = indexValue;
+    }
 }
 
-export class CardPreviewView {
 
+export class CardCatalogView extends CardBaseView{
+    protected imageNode: HTMLImageElement;
+    protected categoryNode: HTMLElement;
+
+    constructor(container: HTMLElement) {
+        super(container);
+        this.imageNode = ensureElement<HTMLImageElement>('.card .card__image');
+        this.categoryNode = ensureElement<HTMLElement>('.card .card__category');
+    }
+
+    set image(imageName: string) {
+        this.imageNode.src = imageName;
+    }
+
+    set category(categoryName: string) {
+        this.categoryNode.textContent = categoryName;
+    }
 }
 
-export class CardBasketView {
+export class CardPreviewView extends CardCatalogView{
+    protected textNode: HTMLElement;
 
+    constructor(container: HTMLElement) {
+        super(container);
+        this.textNode = ensureElement<HTMLElement>('.card .card__text');
+    }
+
+    set text(textValue: string) {
+        this.textNode.textContent = textValue;
+    }
 }
+
