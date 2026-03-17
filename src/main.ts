@@ -9,6 +9,7 @@ import { HeaderView } from './components/views/HeaderView.ts';
 import { ensureElement } from './utils/utils.ts';
 import {GalleryView} from "./components/views/GalleryView.ts";
 import {ModalView} from "./components/views/ModalView.ts";
+import {CardCatalogView} from "./components/views/CardView.ts";
 
 
 const catalogModel = new Catalog();
@@ -28,7 +29,7 @@ const modalElement: HTMLElement = ensureElement<HTMLElement>('.modal', document)
 
 // const res = catalogModel.getProductList()
 
-if (false) {
+if (true) {
 
     // Проверка работы класса Catalog
     console.log('1). Проверка класса Catalog');
@@ -115,4 +116,6 @@ if (false) {
 }
 
 headerView.counter = 55;
-galleryElement.catalog = catalogModel.getProductList();
+const productList = catalogModel.getProductList().map((item) => {
+    const card = new CardCatalogView()
+})
