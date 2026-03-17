@@ -7,6 +7,8 @@ import { MainApi } from './services/apiService.ts';
 import { apiProducts } from './utils/data.ts';
 import { HeaderView } from './components/views/HeaderView.ts';
 import { ensureElement } from './utils/utils.ts';
+import {GalleryView} from "./components/views/GalleryView.ts";
+import {ModalView} from "./components/views/ModalView.ts";
 
 
 const catalogModel = new Catalog();
@@ -14,10 +16,14 @@ const cartModel = new Cart();
 const customerModel = new Customer();
 const app = new MainApi(API_URL);
 
-const headerView = new HeaderView();
+const rootElement: HTMLElement = ensureElement<HTMLElement>('body');
+const headerView = new HeaderView(rootElement);
+const galleryView = new GalleryView(rootElement);
 
-const headerElement: HTMLElement = ensureElement<HTMLElement>('.header', document);
-const galleryElement: HTMLElement = ensureElement<HTMLElement>('.gallery', document);
+const modalView = new ModalView(rootElement);
+
+const headerElement: HTMLElement = ensureElement<HTMLElement>('.header', rootElement);
+const galleryElement: HTMLElement = ensureElement<HTMLElement>('.gallery', rootElement);
 const modalElement: HTMLElement = ensureElement<HTMLElement>('.modal', document);
 
 // const res = catalogModel.getProductList()
