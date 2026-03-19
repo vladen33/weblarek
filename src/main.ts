@@ -12,11 +12,13 @@ import {ModalView} from "./components/views/ModalView.ts";
 import {CardCatalogView} from "./components/views/CardView.ts";
 
 
+const api = new MainApi(API_URL);
 const catalogModel = new Catalog();
-catalogModel.setProductList(apiProducts.items); //TODO заменить потом на нормальный API
+catalogModel.setProductList((await api.getCatalog()).items); //TODO заменить потом на нормальный API
 const cartModel = new Cart();
 const customerModel = new Customer();
-const app = new MainApi(API_URL);
+
+
 console.log('API_URL', API_URL);
 
 const rootElement: HTMLElement = ensureElement<HTMLElement>('body');
@@ -136,7 +138,7 @@ if (false) {
     console.log(response);
 }
 
-headerView.counter = 55;
+// headerView.counter = 55;
 // const cardCatalogTemplate: HTMLTemplateElement = ensureElement<HTMLTemplateElement>('#card-catalog');
 // const cardCatalogElement: HTMLElement = cardCatalogTemplate.cloneNode(true).firstChild;
 
