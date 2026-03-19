@@ -10,11 +10,13 @@ import { ensureElement } from './utils/utils.ts';
 import {GalleryView} from "./components/views/GalleryView.ts";
 import {ModalView} from "./components/views/ModalView.ts";
 import {CardCatalogView} from "./components/views/CardView.ts";
+import { EventEmitter } from './components/base/Events.ts';
 
 
+const events = new EventEmitter();
 const api = new MainApi(API_URL);
-const catalogModel = new Catalog();
-catalogModel.setProductList((await api.getCatalog()).items); //TODO заменить потом на нормальный API
+const catalogModel = new Catalog(events);
+catalogModel.setProductList((await api.getCatalog()).items);
 const cartModel = new Cart();
 const customerModel = new Customer();
 
@@ -22,14 +24,22 @@ const customerModel = new Customer();
 const rootElement: HTMLElement = ensureElement<HTMLElement>('body');
 const headerView = new HeaderView(rootElement);
 const galleryView = new GalleryView(rootElement);
+const modalView = new ModalView(ensureElement<HTMLElement>('.modal'));
 
 const catalog: HTMLElement[] = catalogModel.getProductList().map(data => {
     const cardCatalogContent = ensureElement<HTMLTemplateElement>('#card-catalog').content;
     const cardCatalogElement: HTMLElement = cardCatalogContent.cloneNode(true) as HTMLElement;
-    const prodElem: CardCatalogView = new CardCatalogView(cardCatalogElement);
+    const prodElem: CardCatalogView = new CardCatalogView(cardCatalogElement, events);
     return prodElem.render(data);
 });
 galleryView.catalog = catalog;
+
+events.on('product:selected', prod => {
+    modalView.render(prod);
+});
+
+
+
 
 if (false) {
 
@@ -116,4 +126,3 @@ if (false) {
     console.log('Ответ от сервера:');
     console.log(response);
 }
-

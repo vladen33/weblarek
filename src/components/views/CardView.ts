@@ -1,16 +1,19 @@
-import {Component} from "../base/Component.ts";
+import { Component } from "../base/Component.ts";
 import { ensureElement } from '../../utils/utils.ts';
 import { API_URL, CDN_URL } from "../../utils/constants.ts";
+import { IEvents } from '../base/Events.ts';
 
 
 export abstract class CardBaseView extends Component<T>{
     protected titleNode: HTMLElement;
     protected priceNode: HTMLElement;
+    protected id: string;
 
     protected constructor(container: HTMLElement) {
         super(container);
         this.titleNode = ensureElement<HTMLElement>('.card__title', this.container);
         this.priceNode = ensureElement<HTMLElement>('.card__price', this.container);
+        this.id = '';
     }
 
     set title(titleValue: string) {
@@ -45,10 +48,14 @@ export class CardCatalogView extends CardBaseView{
     protected imageNode: HTMLImageElement;
     protected categoryNode: HTMLElement;
 
-    constructor(container: HTMLElement) {
+    constructor(container: HTMLElement, protected events: IEvents) {
         super(container);
         this.imageNode = ensureElement<HTMLImageElement>('.card__image', this.container);
         this.categoryNode = ensureElement<HTMLElement>('.card__category', this.container);
+
+        this.container.addEventListener('click', () => {
+            this.events.emit('card:select', { id: this.id });
+        });
     }
 
     set image(imageName: string) {
@@ -58,13 +65,17 @@ export class CardCatalogView extends CardBaseView{
     set category(categoryName: string) {
         this.categoryNode.textContent = categoryName;
     }
+
+    render(data?: Partial<T>): HTMLElement {
+        return super.render(data);
+    }
 }
 
 export class CardPreviewView extends CardCatalogView{
     protected textNode: HTMLElement;
 
     constructor(container: HTMLElement) {
-        super(container);
+        super(container, );
         this.textNode = ensureElement<HTMLElement>('.card__text', this.container);
     }
 

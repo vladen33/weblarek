@@ -1,5 +1,5 @@
 import { Component } from '../base/Component.ts';
-import { IModalContent } from '../../types/index.ts';
+import { IModalContent } from '../../types';
 
 export class ModalView extends Component<IModalContent> {
     private modalButtonElement: HTMLButtonElement | null;
