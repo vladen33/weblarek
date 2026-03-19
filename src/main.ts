@@ -19,38 +19,17 @@ const cartModel = new Cart();
 const customerModel = new Customer();
 
 
-console.log('API_URL', API_URL);
-
 const rootElement: HTMLElement = ensureElement<HTMLElement>('body');
 const headerView = new HeaderView(rootElement);
 const galleryView = new GalleryView(rootElement);
 
-const catalog = catalogModel.getProductList().map(data => {
+const catalog: HTMLElement[] = catalogModel.getProductList().map(data => {
     const cardCatalogContent = ensureElement<HTMLTemplateElement>('#card-catalog').content;
-    const cardCatalogElement: HTMLElement = cardCatalogContent.cloneNode(true);
-    const prodElem = new CardCatalogView(cardCatalogElement);
-
-    // console.log('prodElem', prodElem);
-    console.log('prodElem.render(data)', prodElem.render(data));
-    // return prodElem.render(data);
-    // return document.createElement('p');
-    return cardCatalogElement;
+    const cardCatalogElement: HTMLElement = cardCatalogContent.cloneNode(true) as HTMLElement;
+    const prodElem: CardCatalogView = new CardCatalogView(cardCatalogElement);
+    return prodElem.render(data);
 });
-
-
-console.log("catalog", catalog);
 galleryView.catalog = catalog;
-
-
-
-//
-// const modalView = new ModalView(rootElement);
-//
-// const headerElement: HTMLElement = ensureElement<HTMLElement>('.header', rootElement);
-// const galleryElement: HTMLElement = ensureElement<HTMLElement>('.gallery', rootElement);
-// const modalElement: HTMLElement = ensureElement<HTMLElement>('.modal', document);
-
-// const res = catalogModel.getProductList()
 
 if (false) {
 
@@ -138,24 +117,3 @@ if (false) {
     console.log(response);
 }
 
-// headerView.counter = 55;
-// const cardCatalogTemplate: HTMLTemplateElement = ensureElement<HTMLTemplateElement>('#card-catalog');
-// const cardCatalogElement: HTMLElement = cardCatalogTemplate.cloneNode(true).firstChild;
-
-// const cardCatalogContent = ensureElement<HTMLTemplateElement>('#card-catalog').content;
-// const cardCatalogElement: HTMLElement = cardCatalogContent.cloneNode(true);
-// const productElements: HTMLElement[] = (await app.getCatalog()).items.map(item => {
-//     // const elem = new CardCatalogView(cardCatalogElement);
-//     // console.log(elem.render(item));
-//     // return elem.render(item);
-//     return item;
-// });
-// console.log('cardCatalogContent', cardCatalogContent);
-// console.log('cardCatalogElement', cardCatalogElement);
-// console.log('products', products);
-// galleryView(products);
-//
-//
-// const productList = catalogModel.getProductList().map((item) => {
-//     const card = new CardCatalogView()
-// })
