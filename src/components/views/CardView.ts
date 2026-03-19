@@ -1,5 +1,6 @@
 import {Component} from "../base/Component.ts";
 import { ensureElement } from '../../utils/utils.ts';
+import { API_URL, CDN_URL } from "../../utils/constants.ts";
 
 
 export abstract class CardBaseView extends Component<T>{
@@ -51,7 +52,7 @@ export class CardCatalogView extends CardBaseView{
     }
 
     set image(imageName: string) {
-        this.imageNode.src = imageName;
+        this.setImage(this.imageNode, `${CDN_URL}${imageName}`);
     }
 
     set category(categoryName: string) {
@@ -64,7 +65,7 @@ export class CardPreviewView extends CardCatalogView{
 
     constructor(container: HTMLElement) {
         super(container);
-        this.textNode = ensureElement<HTMLElement>('.card .card__text');
+        this.textNode = ensureElement<HTMLElement>('.card__text', this.container);
     }
 
     set text(textValue: string) {

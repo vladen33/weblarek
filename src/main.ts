@@ -1,5 +1,5 @@
 import './scss/styles.scss';
-import { API_URL } from './utils/constants.ts';
+import { API_URL, CDN_URL } from './utils/constants.ts';
 import { Cart } from './components/models/cart.ts';
 import { Catalog } from './components/models/catalog.ts';
 import { Customer } from './components/models/customer.ts';
@@ -17,6 +17,7 @@ catalogModel.setProductList(apiProducts.items); //TODO заменить пото
 const cartModel = new Cart();
 const customerModel = new Customer();
 const app = new MainApi(API_URL);
+console.log('API_URL', API_URL);
 
 const rootElement: HTMLElement = ensureElement<HTMLElement>('body');
 const headerView = new HeaderView(rootElement);
@@ -25,11 +26,10 @@ const galleryView = new GalleryView(rootElement);
 const catalog = catalogModel.getProductList().map(data => {
     const cardCatalogContent = ensureElement<HTMLTemplateElement>('#card-catalog').content;
     const cardCatalogElement: HTMLElement = cardCatalogContent.cloneNode(true);
-    console.log('cardCatalogElement', cardCatalogElement);
     const prodElem = new CardCatalogView(cardCatalogElement);
-    console.log('data', data);
+
     // console.log('prodElem', prodElem);
-    // console.log('prodElem.render(data)', prodElem.render(data));
+    console.log('prodElem.render(data)', prodElem.render(data));
     // return prodElem.render(data);
     // return document.createElement('p');
     return cardCatalogElement;
