@@ -8,8 +8,8 @@ export abstract class CardBaseView extends Component<T>{
 
     protected constructor(container: HTMLElement) {
         super(container);
-        this.titleNode = ensureElement<HTMLElement>('.card .card__title');
-        this.priceNode = ensureElement<HTMLElement>('.card .card__price');
+        this.titleNode = ensureElement<HTMLElement>('.card__title', this.container);
+        this.priceNode = ensureElement<HTMLElement>('.card__price', this.container);
     }
 
     set title(titleValue: string) {
@@ -31,7 +31,7 @@ export class CardBasketView extends CardBaseView{
 
     constructor(container: HTMLElement) {
         super(container);
-        this.indexNode = ensureElement<HTMLElement>('.card .basket__item-index');
+        this.indexNode = ensureElement<HTMLElement>('.basket__item-index', this.container);
     }
 
     set index(indexValue: string) {
@@ -46,8 +46,8 @@ export class CardCatalogView extends CardBaseView{
 
     constructor(container: HTMLElement) {
         super(container);
-        this.imageNode = ensureElement<HTMLImageElement>('.card .card__image');
-        this.categoryNode = ensureElement<HTMLElement>('.card .card__category');
+        this.imageNode = ensureElement<HTMLImageElement>('.card__image', this.container);
+        this.categoryNode = ensureElement<HTMLElement>('.card__category', this.container);
     }
 
     set image(imageName: string) {
