@@ -13,7 +13,7 @@ export class HeaderView extends Component<ICartCounter> {
         this.basketButtonElement = ensureElement<HTMLButtonElement>('.header__basket', this.container);
 
         this.basketButtonElement.addEventListener('click', () => {
-            this.events.emit('cart:open');
+            this.events.emit('basket:open');
         })
     }
 

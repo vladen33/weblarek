@@ -1,27 +1,27 @@
 import {IProduct} from '../../types/index';
 
-export class Cart {
+export class Basket {
     protected prodList: IProduct[] = [];
 
-    getProdListFromCart(): IProduct[] {
+    getProdListFromBasket(): IProduct[] {
         return this.prodList;
     }
-    addProdToCart(prod: IProduct): void {
+    addProdToBasket(prod: IProduct): void {
         this.prodList.push(prod);
     }
-    removeProdFromCart(prod: IProduct): void {
+    removeProdFromBasket(prod: IProduct): void {
         this.prodList = this.prodList.filter(item => item.id !== prod.id);
     }
-    clearCart(): void {
+    clearBasket(): void {
         this.prodList = [];
     }
-    getFullPriceOfCart(): number {
+    getFullPriceOfBasket(): number {
         return this.prodList.reduce((acc, item) => acc + (item.price ?? 0), 0);
     }
-    getCountProdInCart(): number {
+    getCountProdInBasket(): number {
         return this.prodList.length;
     }
-    isProdInCart(prod: IProduct): boolean {
+    isProdInBasket(prod: IProduct): boolean {
         return this.prodList.some(item => item.id === prod.id);
     }
 }

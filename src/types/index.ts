@@ -56,5 +56,5 @@ export interface IModalContent {
 
 export interface IBasketData {
     products: HTMLElement[];
-    count: number;
+    totalPrice: number;
 }
