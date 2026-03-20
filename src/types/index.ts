@@ -53,3 +53,8 @@ export interface IGalleryData {
 export interface IModalContent {
     content: HTMLElement;
 }
+
+export interface IBasketData {
+    products: HTMLElement[];
+    count: number;
+}
