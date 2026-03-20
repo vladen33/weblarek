@@ -43,7 +43,11 @@ events.on('product:selected', prod => {
 
 
 events.on('cart:open', () => {
-    // modal.render({ content: basket.render() });
+    // modalView.render({ content: basket.render() });
+    const htmlElem: HTMLHeadingElement = document.createElement('h1');
+    htmlElem.innerHTML = 'ТЕСТ!!!';
+    modalView.render({ content: htmlElem});
+
     console.log('events.on - cart:open')
     modalView.open();
 });
