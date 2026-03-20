@@ -39,6 +39,7 @@ galleryView.catalog = catalog;
 
 events.on('product:selected', prod => {
     modalView.render(prod);
+    modalView.open();
 });
 
 

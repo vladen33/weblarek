@@ -16,10 +16,14 @@ export class ModalView extends Component<IModalContent> {
         })
     }
 
-    set modalContent(content: HTMLElement) {
+    set content(content: HTMLElement) {
         if (this.modalContentElement) {
             this.modalContentElement.replaceChildren(content);
         }
+    }
+
+    render(data?: Partial<IModalContent>): HTMLElement {
+        return super.render(data);
     }
 
     open(): void {
