@@ -4,19 +4,20 @@ import { Basket } from './components/models/basket.ts';
 import { Catalog } from './components/models/catalog.ts';
 import { Customer } from './components/models/customer.ts';
 import { MainApi } from './services/apiService.ts';
-import { apiProducts } from './utils/data.ts';
 import { HeaderView } from './components/views/HeaderView.ts';
 import { ensureElement } from './utils/utils.ts';
 import { GalleryView } from "./components/views/GalleryView.ts";
 import { ModalView } from "./components/views/ModalView.ts";
 import { CardCatalogView } from "./components/views/CardView.ts";
 import { EventEmitter } from './components/base/Events.ts';
+import {BasketView} from "./components/views/BasketView.ts";
+import {IProduct} from "./types";
 
 
 const events = new EventEmitter();
 const api = new MainApi(API_URL);
 const catalogModel = new Catalog(events);
-const cartModel = new Basket();
+const basketModel = new Basket(events);
 const customerModel = new Customer();
 
 const headerView = new HeaderView(ensureElement<HTMLElement>('.header'), events);
@@ -24,6 +25,9 @@ const galleryView = new GalleryView(ensureElement<HTMLElement>('.page__wrapper')
 const modalView = new ModalView(ensureElement<HTMLElement>('.modal'));
 
 
+const basketContent = ensureElement<HTMLTemplateElement>('#basket').content;
+const basketElement: HTMLElement = basketContent.cloneNode(true) as HTMLElement;
+const basketView = new BasketView(basketElement, events);
 
 catalogModel.setProductList((await api.getCatalog()).items);
 const catalog: HTMLElement[] = catalogModel.getProductList().map(data => {
@@ -34,12 +38,26 @@ const catalog: HTMLElement[] = catalogModel.getProductList().map(data => {
 });
 galleryView.catalog = catalog;
 
-// modalView.modalContent = null;
-// modalView.render()
 
-events.on('basket:change', () => {
 
-})
+
+
+const prodList = catalogModel.getProductList();
+const prodId1 = prodList[0].id;
+const prodId2 = prodList[1].id;
+const prod1 = catalogModel.getProductById(prodId1);
+const prod2 = catalogModel.getProductById(prodId2);
+if (prod1) basketModel.addProductToBasket(prod1);
+if (prod2) basketModel.addProductToBasket(prod2);
+
+
+
+events.on('basket:update', () => {
+    const productsInBasketList: IProduct[] = basketModel.getProductListFromBasket();
+    const res =
+    basketView.totalPrice = basketModel.getFullPriceOfBasket();
+    basketView.render();
+});
 
 events.on('product:selected', prod => {
     modalView.render(prod);
@@ -48,12 +66,7 @@ events.on('product:selected', prod => {
 
 
 events.on('basket:open', () => {
-    // modalView.render({ content: basket.render() });
-    const htmlElem: HTMLHeadingElement = document.createElement('h1');
-    htmlElem.innerHTML = 'ТЕСТ!!!';
-    modalView.render({ content: htmlElem});
-
-    console.log('events.on - basket:open')
+    modalView.render({ content: basketView.render()});
     modalView.open();
 });
 

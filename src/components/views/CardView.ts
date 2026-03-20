@@ -31,18 +31,19 @@ export abstract class CardBaseView extends Component<T>{
 
 
 export class CardBasketView extends CardBaseView{
-    protected indexNode: HTMLElement;
+    protected indexElement: HTMLElement;
+    protected deleteButtonElement: HTMLButtonElement;
 
     constructor(container: HTMLElement) {
         super(container);
-        this.indexNode = ensureElement<HTMLElement>('.basket__item-index', this.container);
+        this.indexElement = ensureElement<HTMLElement>('.basket__item-index', this.container);
+        this.deleteButtonElement = ensureElement<HTMLButtonElement>('.basket__item-delete', this.container);
     }
 
     set index(indexValue: string) {
-        this.indexNode.textContent = indexValue;
+        this.indexElement.textContent = indexValue;
     }
 }
-
 
 export class CardCatalogView extends CardBaseView{
     protected imageNode: HTMLImageElement;

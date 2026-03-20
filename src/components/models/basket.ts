@@ -1,27 +1,37 @@
-import {IProduct} from '../../types/index';
+import { IProduct } from '../../types';
+import { IEvents } from '../base/Events';
+
 
 export class Basket {
-    protected prodList: IProduct[] = [];
+    protected productList: IProduct[] = [];
+    protected events: IEvents;
 
-    getProdListFromBasket(): IProduct[] {
-        return this.prodList;
+    constructor(events: IEvents) {
+        this.events = events;
     }
-    addProdToBasket(prod: IProduct): void {
-        this.prodList.push(prod);
+
+    getProductListFromBasket(): IProduct[] {
+        return this.productList;
     }
-    removeProdFromBasket(prod: IProduct): void {
-        this.prodList = this.prodList.filter(item => item.id !== prod.id);
+    addProductToBasket(product: IProduct): void {
+        this.productList.push(product);
+        this.events.emit('basket:update');
+    }
+    removeProductFromBasket(prod: IProduct): void {
+        this.productList = this.productList.filter(item => item.id !== prod.id);
+        this.events.emit('basket:update');
     }
     clearBasket(): void {
-        this.prodList = [];
+        this.productList = [];
+        this.events.emit('basket:update');
     }
     getFullPriceOfBasket(): number {
-        return this.prodList.reduce((acc, item) => acc + (item.price ?? 0), 0);
+        return this.productList.reduce((acc, item) => acc + (item.price ?? 0), 0);
     }
-    getCountProdInBasket(): number {
-        return this.prodList.length;
+    getCountProductInBasket(): number {
+        return this.productList.length;
     }
-    isProdInBasket(prod: IProduct): boolean {
-        return this.prodList.some(item => item.id === prod.id);
+    isProductInBasket(prod: IProduct): boolean {
+        return this.productList.some(item => item.id === prod.id);
     }
 }
