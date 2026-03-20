@@ -16,9 +16,23 @@ export class BasketView extends Component<IBasketData> {
         this.basketListElement = ensureElement<HTMLUListElement>('.basket__list', this.container);
         this.basketButtonElement = ensureElement<HTMLButtonElement>('.basket__button', this.container);
         this.basketPriceElement = ensureElement<HTMLElement>('.basket__price', this.container);
+        this.basket = [];
     }
 
     set totalPrice(value: number) {
         this.basketPriceElement.textContent = `${value} синапсов`;
+    };
+
+    set basket(items: HTMLElement[]) {
+        this.basketButtonElement.textContent = 'Оформить';
+        if (items.length > 0) {
+            this.basketButtonElement.disabled = false;
+            this.basketListElement.replaceChildren(...items);
+        } else {
+            const message = document.createElement('p');
+            message.textContent = 'Корзина пуста';
+            this.basketButtonElement.disabled = true;
+            this.basketListElement.replaceChildren(message);
+        }
     };
 }

@@ -8,7 +8,7 @@ import { HeaderView } from './components/views/HeaderView.ts';
 import { ensureElement } from './utils/utils.ts';
 import { GalleryView } from "./components/views/GalleryView.ts";
 import { ModalView } from "./components/views/ModalView.ts";
-import { CardCatalogView } from "./components/views/CardView.ts";
+import {CardBasketView, CardCatalogView} from "./components/views/CardView.ts";
 import { EventEmitter } from './components/base/Events.ts';
 import {BasketView} from "./components/views/BasketView.ts";
 import {IProduct} from "./types";
@@ -53,11 +53,25 @@ if (prod2) basketModel.addProductToBasket(prod2);
 
 
 events.on('basket:update', () => {
-    const productsInBasketList: IProduct[] = basketModel.getProductListFromBasket();
-    const res =
+    const productsInBasketList: IProduct[] = [...basketModel.getProductListFromBasket()];
+    const basketListItems = productsInBasketList.map((item, index) => {
+        const cardBasketContent = ensureElement<HTMLTemplateElement>('#card-basket').content;
+        const cardBasketElement: HTMLElement = cardBasketContent.cloneNode(true) as HTMLElement;
+        const basketProduct = new CardBasketView(cardBasketElement, events);
+
+        basketProduct.index = (index + 1).toString();
+        basketProduct.title = item.title;
+        basketProduct.price = item.price === null ? null : item.price.toString();
+
+        return basketProduct.render(item);
+    });
+
+    basketView.basket = basketListItems;
     basketView.totalPrice = basketModel.getFullPriceOfBasket();
-    basketView.render();
+    headerView.counter = basketModel.getCountProductInBasket();
 });
+
+events.emit('basket:update');
 
 events.on('product:selected', prod => {
     modalView.render(prod);

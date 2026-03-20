@@ -1,8 +1,8 @@
 import { Component } from '../base/Component.ts';
-import { IModalContent } from '../../types';
+import { IModalData } from '../../types';
 import { ensureElement } from '../../utils/utils.ts';
 
-export class ModalView extends Component<IModalContent> {
+export class ModalView extends Component<IModalData> {
     private modalCloseButtonElement: HTMLButtonElement | null;
     private modalContentElement: HTMLElement | null;
 
@@ -22,7 +22,7 @@ export class ModalView extends Component<IModalContent> {
         }
     }
 
-    render(data?: Partial<IModalContent>): HTMLElement {
+    render(data?: Partial<IModalData>): HTMLElement {
         return super.render(data);
     }
 

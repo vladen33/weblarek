@@ -42,7 +42,7 @@ export interface ICatalogResponse {
     items: IProduct[];
 }
 
-export interface ICartCounter {
+export interface IBasketData {
     counter: number;
 }
 
@@ -50,11 +50,15 @@ export interface IGalleryData {
     catalog: HTMLElement[];
 }
 
-export interface IModalContent {
+export interface IModalData {
     content: HTMLElement;
 }
 
 export interface IBasketData {
     products: HTMLElement[];
     totalPrice: number;
+}
+
+export interface ICardData extends Partial<IProduct> {
+    index?: number;
 }

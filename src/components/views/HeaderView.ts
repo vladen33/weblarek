@@ -1,9 +1,9 @@
 import { Component } from '../base/Component.ts';
-import { ICartCounter } from '../../types';
+import { IBasketData } from '../../types';
 import { ensureElement } from '../../utils/utils.ts';
 import { IEvents } from '../base/Events.ts';
 
-export class HeaderView extends Component<ICartCounter> {
+export class HeaderView extends Component<IBasketData> {
     private basketCounterElement: HTMLElement;
     private basketButtonElement: HTMLButtonElement;
 

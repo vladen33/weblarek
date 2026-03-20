@@ -20,7 +20,7 @@ export abstract class CardBaseView extends Component<T>{
         this.titleNode.textContent = titleValue;
     }
 
-    set price(priceValue: string) {
+    set price(priceValue: string | null) {
         if (priceValue) {
             this.priceNode.textContent = `${priceValue} синапсов`;
         } else {
@@ -34,7 +34,7 @@ export class CardBasketView extends CardBaseView{
     protected indexElement: HTMLElement;
     protected deleteButtonElement: HTMLButtonElement;
 
-    constructor(container: HTMLElement) {
+    constructor(container: HTMLElement, events: IEvents) {
         super(container);
         this.indexElement = ensureElement<HTMLElement>('.basket__item-index', this.container);
         this.deleteButtonElement = ensureElement<HTMLButtonElement>('.basket__item-delete', this.container);
@@ -75,8 +75,8 @@ export class CardCatalogView extends CardBaseView{
 export class CardPreviewView extends CardCatalogView{
     protected textNode: HTMLElement;
 
-    constructor(container: HTMLElement) {
-        super(container, );
+    constructor(container: HTMLElement, protected events: IEvents) {
+        super(container, events);
         this.textNode = ensureElement<HTMLElement>('.card__text', this.container);
     }
 
