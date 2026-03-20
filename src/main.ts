@@ -16,16 +16,16 @@ import { EventEmitter } from './components/base/Events.ts';
 const events = new EventEmitter();
 const api = new MainApi(API_URL);
 const catalogModel = new Catalog(events);
-catalogModel.setProductList((await api.getCatalog()).items);
 const cartModel = new Cart();
 const customerModel = new Customer();
 
-
-const rootElement: HTMLElement = ensureElement<HTMLElement>('body');
-const headerView = new HeaderView(rootElement);
-const galleryView = new GalleryView(rootElement);
+const headerView = new HeaderView(ensureElement<HTMLElement>('.header'), events);
+const galleryView = new GalleryView(ensureElement<HTMLElement>('.page__wrapper'));
 const modalView = new ModalView(ensureElement<HTMLElement>('.modal'));
 
+
+
+catalogModel.setProductList((await api.getCatalog()).items);
 const catalog: HTMLElement[] = catalogModel.getProductList().map(data => {
     const cardCatalogContent = ensureElement<HTMLTemplateElement>('#card-catalog').content;
     const cardCatalogElement: HTMLElement = cardCatalogContent.cloneNode(true) as HTMLElement;
@@ -34,15 +34,22 @@ const catalog: HTMLElement[] = catalogModel.getProductList().map(data => {
 });
 galleryView.catalog = catalog;
 
+// modalView.modalContent = null;
+// modalView.render()
+
 events.on('product:selected', prod => {
     modalView.render(prod);
 });
 
 
+events.on('cart:open', () => {
+    // modal.render({ content: basket.render() });
+    console.log('events.on - cart:open')
+    modalView.open();
+});
 
 
 if (false) {
-
     // Проверка работы класса Catalog
     console.log('1). Проверка класса Catalog');
     console.log('-');
