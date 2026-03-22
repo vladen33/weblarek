@@ -8,7 +8,7 @@ import { HeaderView } from './components/views/HeaderView.ts';
 import { ensureElement, cloneTemplate } from './utils/utils.ts';
 import { GalleryView } from "./components/views/GalleryView.ts";
 import { ModalView } from "./components/views/ModalView.ts";
-import {CardBasketView, CardCatalogView} from "./components/views/CardView.ts";
+import {CardBasketView, CardCatalogView, CardPreviewView} from "./components/views/CardView.ts";
 import { EventEmitter } from './components/base/Events.ts';
 import {BasketView} from "./components/views/BasketView.ts";
 import {IProduct} from "./types";
@@ -25,6 +25,7 @@ const galleryView = new GalleryView(ensureElement<HTMLElement>('.page__wrapper')
 const modalView = new ModalView(ensureElement<HTMLElement>('.modal'));
 
 const cardCatalogTemplate = ensureElement<HTMLTemplateElement>('#card-catalog');
+const cardPreviewTemplate = ensureElement<HTMLTemplateElement>('#card-preview');
 
 
 // Отрисовка каталога при любом его изменении
@@ -40,6 +41,23 @@ events.on('catalog:change', () => {
 catalogModel.setProductList((await api.getCatalog()).items);
 events.emit('catalog:change');
 
+// При клике на карточку продукта, выбранный продукт становиться текущим
+events.on('card:click', (event: {id: string}) => {
+    catalogModel.setSelectedProduct(event.id);
+});
+
+// Вывод карточки в модальном окне при выборе какой-либо карточки в каталоге в качестве текущей
+events.on('product:show', (event: {id: string}) => {
+    const product = catalogModel.getProductById(event.id);
+    if (!product) {
+        return;
+    }
+    const cardPreview = new CardPreviewView(cloneTemplate(cardPreviewTemplate), events);
+    modalView.render({
+        content: cardPreview.render(product)
+    });
+    modalView.open();
+});
 
 
 

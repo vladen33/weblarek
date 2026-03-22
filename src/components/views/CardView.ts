@@ -2,6 +2,8 @@ import { Component } from "../base/Component.ts";
 import { ensureElement } from '../../utils/utils.ts';
 import { API_URL, CDN_URL } from "../../utils/constants.ts";
 import { IEvents } from '../base/Events.ts';
+import { IProduct } from '../../types';
+
 
 
 export abstract class CardBaseView extends Component<T>{
@@ -55,7 +57,7 @@ export class CardCatalogView extends CardBaseView{
         this.categoryNode = ensureElement<HTMLElement>('.card__category', this.container);
 
         this.container.addEventListener('click', () => {
-            this.events.emit('card:select', { id: this.id });
+            this.events.emit('product:show', { id: this.id });
         });
     }
 
@@ -68,20 +70,44 @@ export class CardCatalogView extends CardBaseView{
     }
 
     render(data?: Partial<T>): HTMLElement {
+        this.id = data.id;
         return super.render(data);
     }
 }
 
 export class CardPreviewView extends CardCatalogView{
     protected textNode: HTMLElement;
+    protected buttonNode: HTMLButtonElement;
+    protected inBasket: boolean = false;
 
     constructor(container: HTMLElement, protected events: IEvents) {
         super(container, events);
         this.textNode = ensureElement<HTMLElement>('.card__text', this.container);
+        this.buttonNode = ensureElement<HTMLButtonElement>('.card__button', this.container);
     }
 
     set text(textValue: string) {
         this.textNode.textContent = textValue;
+    }
+
+    render(data: IProduct, inBasket = false): HTMLElement {
+        this.id = data.id;
+        this.image = data.image;
+        this.category = data.category;
+        this.title = data.title;
+        this.text = data.description;
+        this.price = data.price;
+        this.inBasket = inBasket;
+
+        if (data.price === null) {
+            this.buttonNode.disabled = true;
+            this.buttonNode.textContent = 'Недоступно';
+        } else {
+            this.buttonNode.disabled = false;
+            this.buttonNode.textContent = this.inBasket ? 'Удалить из корзины' : 'Купить';
+        }
+
+        return super.render(data);
     }
 }
 
