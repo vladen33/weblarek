@@ -84,6 +84,17 @@ export class CardPreviewView extends CardCatalogView{
         super(container, events);
         this.textNode = ensureElement<HTMLElement>('.card__text', this.container);
         this.buttonNode = ensureElement<HTMLButtonElement>('.card__button', this.container);
+
+        this.buttonNode.addEventListener('click', (event) => {
+            event.stopPropagation();
+            this.inBasket = !this.inBasket;
+            this.buttonNode.textContent = this.inBasket ? 'Удалить из корзины' : 'Купить';
+            if (this.inBasket) {
+                this.events.emit('basket:product-delete', {id: this.id});
+            } else {
+                this.events.emit('basket:product-add', {id: this.id});
+            }
+        });
     }
 
     set text(textValue: string) {
@@ -91,6 +102,7 @@ export class CardPreviewView extends CardCatalogView{
     }
 
     render(data: IProduct, inBasket = false): HTMLElement {
+        console.log('product:show dataprice => ', data.price)
         this.id = data.id;
         this.image = data.image;
         this.category = data.category;
@@ -98,6 +110,11 @@ export class CardPreviewView extends CardCatalogView{
         this.text = data.description;
         this.price = data.price;
         this.inBasket = inBasket;
+
+        console.log('data.price', data.price);
+        console.log('this.category', this.category);
+        console.log('this.title', this.title);
+        console.log('this.text', this.text);
 
         if (data.price === null) {
             this.buttonNode.disabled = true;

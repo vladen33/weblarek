@@ -22,6 +22,4 @@ export class HeaderView extends Component<IBasketData> {
             this.basketCounterElement.textContent = productCount.toString();
         }
     }
-
-
 }
