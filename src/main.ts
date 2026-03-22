@@ -8,10 +8,10 @@ import { HeaderView } from './components/views/HeaderView.ts';
 import { ensureElement, cloneTemplate } from './utils/utils.ts';
 import { GalleryView } from "./components/views/GalleryView.ts";
 import { ModalView } from "./components/views/ModalView.ts";
-import {CardBasketView, CardCatalogView, CardPreviewView} from "./components/views/CardView.ts";
+import { CardBasketView, CardCatalogView, CardPreviewView } from "./components/views/CardView.ts";
 import { EventEmitter } from './components/base/Events.ts';
-import {BasketView} from "./components/views/BasketView.ts";
-import {IProduct} from "./types";
+import { BasketView } from "./components/views/BasketView.ts";
+import { IProduct } from "./types";
 
 
 const events = new EventEmitter();
@@ -26,7 +26,9 @@ const modalView = new ModalView(ensureElement<HTMLElement>('.modal'));
 const cardCatalogTemplate = ensureElement<HTMLTemplateElement>('#card-catalog');
 const cardPreviewTemplate = ensureElement<HTMLTemplateElement>('#card-preview');
 const cardBasketTemplate = ensureElement<HTMLTemplateElement>('#card-basket');
+const basketTemplate = ensureElement<HTMLTemplateElement>('#basket');
 
+const basketView = new BasketView(cloneTemplate(basketTemplate), events);
 
 // Отрисовка каталога при любом его изменении
 events.on('catalog:change', () => {
@@ -76,10 +78,6 @@ events.on('basket:product-delete', (event: {id: string}) => {
     }
     basketModel.removeProductFromBasket(product);
 });
-
-const basketContent = ensureElement<HTMLTemplateElement>('#basket').content;
-const basketElement: HTMLElement = basketContent.cloneNode(true) as HTMLElement;
-const basketView = new BasketView(basketElement, events);
 
 events.on('basket:update', () => {
     console.log('basket:update');

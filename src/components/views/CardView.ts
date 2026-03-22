@@ -40,6 +40,11 @@ export class CardBasketView extends CardBaseView{
         super(container);
         this.indexElement = ensureElement<HTMLElement>('.basket__item-index', this.container);
         this.deleteButtonElement = ensureElement<HTMLButtonElement>('.basket__item-delete', this.container);
+
+        this.deleteButtonElement.addEventListener('click', (event) => {
+            event.stopPropagation();
+            events.emit('basket:product-delete', {id: this.id})
+        })
     }
 
     set index(indexValue: string) {
@@ -90,9 +95,9 @@ export class CardPreviewView extends CardCatalogView{
             this.inBasket = !this.inBasket;
             this.buttonNode.textContent = this.inBasket ? 'Удалить из корзины' : 'Купить';
             if (this.inBasket) {
-                this.events.emit('basket:product-delete', {id: this.id});
-            } else {
                 this.events.emit('basket:product-add', {id: this.id});
+            } else {
+                this.events.emit('basket:product-delete', {id: this.id});
             }
         });
     }
