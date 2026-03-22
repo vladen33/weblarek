@@ -20,6 +20,9 @@ export abstract class Component<T> {
 
     // Вернуть корневой DOM-элемент
     render(data?: Partial<T>): HTMLElement {
+        console.log('data = ', data)
+        // console.log('this.container = ', this.container)
+
         Object.assign(this as object, data ?? {});
         return this.container;
     }

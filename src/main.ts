@@ -25,11 +25,24 @@ const galleryView = new GalleryView(ensureElement<HTMLElement>('.page__wrapper')
 const modalView = new ModalView(ensureElement<HTMLElement>('.modal'));
 
 
-const basketContent = ensureElement<HTMLTemplateElement>('#basket').content;
-const basketElement: HTMLElement = basketContent.cloneNode(true) as HTMLElement;
-const basketView = new BasketView(basketElement, events);
+// Отрисовка каталога при любом его изменении
+events.on('catalog:change', () => {
+    const cardItems = catalogModel.getProductList().map(product => {
+        const cardCatalogContent = ensureElement<HTMLTemplateElement>('#card-catalog').content;
+        const cardCatalogElement: HTMLElement = cardCatalogContent.cloneNode(true) as HTMLElement;
+        const card = new CardCatalogView(cardCatalogElement, events);
+        return card.render(product);
+    })
+    galleryView.render({ catalog: cardItems })
+})
+
+
+// const basketContent = ensureElement<HTMLTemplateElement>('#basket').content;
+// const basketElement: HTMLElement = basketContent.cloneNode(true) as HTMLElement;
+// const basketView = new BasketView(basketElement, events);
 
 catalogModel.setProductList((await api.getCatalog()).items);
+
 const catalog: HTMLElement[] = catalogModel.getProductList().map(data => {
     const cardCatalogContent = ensureElement<HTMLTemplateElement>('#card-catalog').content;
     const cardCatalogElement: HTMLElement = cardCatalogContent.cloneNode(true) as HTMLElement;
@@ -41,48 +54,48 @@ galleryView.catalog = catalog;
 
 
 
+//
+// const prodList = catalogModel.getProductList();
+// const prodId1 = prodList[0].id;
+// const prodId2 = prodList[1].id;
+// const prod1 = catalogModel.getProductById(prodId1);
+// const prod2 = catalogModel.getProductById(prodId2);
+// if (prod1) basketModel.addProductToBasket(prod1);
+// if (prod2) basketModel.addProductToBasket(prod2);
+//
 
-const prodList = catalogModel.getProductList();
-const prodId1 = prodList[0].id;
-const prodId2 = prodList[1].id;
-const prod1 = catalogModel.getProductById(prodId1);
-const prod2 = catalogModel.getProductById(prodId2);
-if (prod1) basketModel.addProductToBasket(prod1);
-if (prod2) basketModel.addProductToBasket(prod2);
+//
+// events.on('basket:update', () => {
+//     const productsInBasketList: IProduct[] = [...basketModel.getProductListFromBasket()];
+//     const basketListItems = productsInBasketList.map((item, index) => {
+//         const cardBasketContent = ensureElement<HTMLTemplateElement>('#card-basket').content;
+//         const cardBasketElement: HTMLElement = cardBasketContent.cloneNode(true) as HTMLElement;
+//         const basketProduct = new CardBasketView(cardBasketElement, events);
+//
+//         basketProduct.index = (index + 1).toString();
+//         basketProduct.title = item.title;
+//         basketProduct.price = item.price === null ? null : item.price.toString();
+//
+//         return basketProduct.render(item);
+//     });
+//     basketView.basket = basketListItems;
+//     basketView.totalPrice = basketModel.getFullPriceOfBasket();
+//     headerView.counter = basketModel.getCountProductInBasket();
+// });
+
+// events.emit('basket:update');
+
+// events.on('product:selected', prod => {
+//     modalView.render(prod);
+//     modalView.open();
+// });
 
 
-
-events.on('basket:update', () => {
-    const productsInBasketList: IProduct[] = [...basketModel.getProductListFromBasket()];
-    const basketListItems = productsInBasketList.map((item, index) => {
-        const cardBasketContent = ensureElement<HTMLTemplateElement>('#card-basket').content;
-        const cardBasketElement: HTMLElement = cardBasketContent.cloneNode(true) as HTMLElement;
-        const basketProduct = new CardBasketView(cardBasketElement, events);
-
-        basketProduct.index = (index + 1).toString();
-        basketProduct.title = item.title;
-        basketProduct.price = item.price === null ? null : item.price.toString();
-
-        return basketProduct.render(item);
-    });
-
-    basketView.basket = basketListItems;
-    basketView.totalPrice = basketModel.getFullPriceOfBasket();
-    headerView.counter = basketModel.getCountProductInBasket();
-});
-
-events.emit('basket:update');
-
-events.on('product:selected', prod => {
-    modalView.render(prod);
-    modalView.open();
-});
-
-
-events.on('basket:open', () => {
-    modalView.render({ content: basketView.render()});
-    modalView.open();
-});
+// events.on('basket:open', () => {
+//     const content = basketView.render();
+//     modalView.render({ content: content});
+//     modalView.open();
+// });
 
 //
 // if (false) {

@@ -35,4 +35,9 @@ export class BasketView extends Component<IBasketData> {
             this.basketListElement.replaceChildren(message);
         }
     };
+
+    render(data?: Partial<IBasketData>): HTMLElement {
+        const rendered = super.render(data);
+        return rendered;
+    }
 }
