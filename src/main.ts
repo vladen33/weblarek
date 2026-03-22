@@ -54,13 +54,15 @@ events.on('product:show', (event: {id: string}) => {
     if (!product) {
         return;
     }
+    const isProductInBasket = basketModel.isProductInBasket(product);
     const cardPreview = new CardPreviewView(cloneTemplate(cardPreviewTemplate), events);
     modalView.render({
-        content: cardPreview.render(product)
+        content: cardPreview.render(product, isProductInBasket)
     });
     modalView.open();
 });
 
+// Добавляет переданный продукт в корзину
 events.on('basket:product-add', (event: {id: string}) => {
     console.log('basket:product-add=> ', event.id)
     const product = catalogModel.getProductById(event.id);
@@ -70,6 +72,7 @@ events.on('basket:product-add', (event: {id: string}) => {
     basketModel.addProductToBasket(product);
 });
 
+// Удаляет переданный продукт из корзины
 events.on('basket:product-delete', (event: {id: string}) => {
     console.log('basket:product-delete=> ', event.id)
     const product = catalogModel.getProductById(event.id);
@@ -105,4 +108,8 @@ events.on('basket:open', () => {
     const content = basketView.render();
     modalView.render({ content: content});
     modalView.open();
+});
+
+events.on('basket:order', () => {
+
 });

@@ -109,17 +109,19 @@ export class CardPreviewView extends CardCatalogView{
     render(data: IProduct, inBasket = false): HTMLElement {
         console.log('product:show dataprice => ', data.price)
         this.id = data.id;
-        this.image = data.image;
-        this.category = data.category;
-        this.title = data.title;
-        this.text = data.description;
-        this.price = data.price;
         this.inBasket = inBasket;
 
-        console.log('data.price', data.price);
-        console.log('this.category', this.category);
-        console.log('this.title', this.title);
-        console.log('this.text', this.text);
+        // this.image = data.image;
+        // this.category = data.category;
+        // this.title = data.title;
+        // this.text = data.description;
+        // this.price = data.price;
+        // this.inBasket = inBasket;
+
+        // console.log('data.price', data.price);
+        // console.log('this.category', this.category);
+        // console.log('this.title', this.title);
+        // console.log('this.text', this.text);
 
         if (data.price === null) {
             this.buttonNode.disabled = true;

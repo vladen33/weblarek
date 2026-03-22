@@ -10,13 +10,18 @@ export class BasketView extends Component<IBasketData> {
     private basketButtonElement: HTMLButtonElement;
     private basketPriceElement: HTMLElement;
 
-    constructor(protected readonly container: HTMLElement, events: IEvents) {
+    constructor(protected readonly container: HTMLElement, protected events: IEvents) {
         super(container);
         this.modalTitleElement = ensureElement<HTMLElement>('.modal__title', this.container);
         this.basketListElement = ensureElement<HTMLUListElement>('.basket__list', this.container);
         this.basketButtonElement = ensureElement<HTMLButtonElement>('.basket__button', this.container);
         this.basketPriceElement = ensureElement<HTMLElement>('.basket__price', this.container);
         this.basket = [];
+
+        this.basketButtonElement.addEventListener('click', (event) => {
+            event.stopPropagation();
+            this.events.emit('basket:order');
+        })
     }
 
     set totalPrice(value: number) {
