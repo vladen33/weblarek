@@ -5,7 +5,7 @@ import { Catalog } from './components/models/catalog.ts';
 import { Customer } from './components/models/customer.ts';
 import { MainApi } from './services/apiService.ts';
 import { HeaderView } from './components/views/HeaderView.ts';
-import { ensureElement } from './utils/utils.ts';
+import { ensureElement, cloneTemplate } from './utils/utils.ts';
 import { GalleryView } from "./components/views/GalleryView.ts";
 import { ModalView } from "./components/views/ModalView.ts";
 import {CardBasketView, CardCatalogView} from "./components/views/CardView.ts";
@@ -24,32 +24,28 @@ const headerView = new HeaderView(ensureElement<HTMLElement>('.header'), events)
 const galleryView = new GalleryView(ensureElement<HTMLElement>('.page__wrapper'));
 const modalView = new ModalView(ensureElement<HTMLElement>('.modal'));
 
+const cardCatalogTemplate = ensureElement<HTMLTemplateElement>('#card-catalog');
+
 
 // Отрисовка каталога при любом его изменении
 events.on('catalog:change', () => {
     const cardItems = catalogModel.getProductList().map(product => {
-        const cardCatalogContent = ensureElement<HTMLTemplateElement>('#card-catalog').content;
-        const cardCatalogElement: HTMLElement = cardCatalogContent.cloneNode(true) as HTMLElement;
-        const card = new CardCatalogView(cardCatalogElement, events);
+        const card = new CardCatalogView(cloneTemplate(cardCatalogTemplate), events);
         return card.render(product);
     })
     galleryView.render({ catalog: cardItems })
 })
 
+// Первоначальная загрузка и отрисовка каталога
+catalogModel.setProductList((await api.getCatalog()).items);
+events.emit('catalog:change');
+
+
+
 
 // const basketContent = ensureElement<HTMLTemplateElement>('#basket').content;
 // const basketElement: HTMLElement = basketContent.cloneNode(true) as HTMLElement;
 // const basketView = new BasketView(basketElement, events);
-
-catalogModel.setProductList((await api.getCatalog()).items);
-
-const catalog: HTMLElement[] = catalogModel.getProductList().map(data => {
-    const cardCatalogContent = ensureElement<HTMLTemplateElement>('#card-catalog').content;
-    const cardCatalogElement: HTMLElement = cardCatalogContent.cloneNode(true) as HTMLElement;
-    const prodElem: CardCatalogView = new CardCatalogView(cardCatalogElement, events);
-    return prodElem.render(data);
-});
-galleryView.catalog = catalog;
 
 
 
