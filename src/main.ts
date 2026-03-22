@@ -12,7 +12,7 @@ import { CardBasketView, CardCatalogView, CardPreviewView } from "./components/v
 import { EventEmitter } from './components/base/Events.ts';
 import { BasketView } from "./components/views/BasketView.ts";
 import { IProduct } from "./types";
-
+import { FormOrderView } from "./components/views/FormView.ts";
 
 const events = new EventEmitter();
 const api = new MainApi(API_URL);
@@ -33,7 +33,7 @@ const successTemplate = ensureElement<HTMLTemplateElement>('#success');
 
 
 const basketView = new BasketView(cloneTemplate(basketTemplate), events);
-
+const formOrderView = new FormOrderView(cloneTemplate(formOrderTemplate), events);
 // Отрисовка каталога при любом его изменении
 events.on('catalog:change', () => {
     const cardItems = catalogModel.getProductList().map(product => {
@@ -115,5 +115,7 @@ events.on('basket:open', () => {
 });
 
 events.on('basket:order', () => {
-
+    console.log('basket:order');
+    modalView.render({ content: formOrderView.render() });
+    modalView.open();
 });
