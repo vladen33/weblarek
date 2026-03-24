@@ -1,13 +1,21 @@
 import {ICustomer, TPayment} from '../../types/index';
+import {IEvents} from "../base/Events.ts";
 
 export class Customer implements ICustomer {
-    payment: TPayment = '';
+    paymentType: TPayment = '';
     address: string = '';
     email: string = '';
     phone: string = '';
 
-    setPayment(payment: TPayment): void {
-        this.payment = payment;
+    constructor(protected events: IEvents) {
+        this.paymentType = 'card';
+        this.address = '';
+        this.email = '';
+        this.phone = '';
+    }
+
+    setPayment(paymentType: TPayment): void {
+        this.paymentType = paymentType;
     }
     setAddress(address: string): void {
         this.address = address;
@@ -19,7 +27,7 @@ export class Customer implements ICustomer {
         this.phone = phone;
     }
     getPayment(): TPayment {
-        return this.payment;
+        return this.paymentType;
     }
     getAddress(): string {
         return this.address;
@@ -30,9 +38,13 @@ export class Customer implements ICustomer {
     getPhone(): string {
         return this.phone;
     }
+    setAllFields(data: Partial<ICustomer>): void {
+        Object.assign(this.getAllFields(), data);
+        this.events.emit('customer-model:has-updated');
+    }
     getAllFields(): ICustomer {
         return {
-            payment: this.getPayment(),
+            paymentType: this.getPayment(),
             address: this.getAddress(),
             email: this.getEmail(),
             phone: this.getPhone()
@@ -46,7 +58,7 @@ export class Customer implements ICustomer {
     }
     validateFields(): Record<string, string> {
         const errors: Record<string, string> = {};
-        if (this.payment === '') {
+        if (this.paymentType === '') {
             errors.payment = 'Не выбран тип платежа';
         }
         if (this.address === '') {

@@ -18,12 +18,12 @@ export class FormOrderView extends Component<T>{
 
         this.payByCardNode.addEventListener('click', () => {
             this.paymentType = 'card';
-            this.events.emit('payment:change', { payment: 'card' });
+            this.events.emit('payment:change', { payment: this.paymentType });
         });
 
         this.payByCashNode.addEventListener('click', () => {
             this.paymentType = 'cash';
-            this.events.emit('payment:change', {payment: 'cash'});
+            this.events.emit('payment:change', {payment: this.paymentType});
         });
     }
 

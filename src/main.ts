@@ -11,13 +11,14 @@ import { ModalView } from "./components/views/ModalView.ts";
 import { CardBasketView, CardCatalogView, CardPreviewView } from "./components/views/CardView.ts";
 import { EventEmitter } from './components/base/Events.ts';
 import { BasketView } from "./components/views/BasketView.ts";
-import { IProduct } from "./types";
+import {ICustomer, IProduct} from "./types";
 import { FormOrderView } from "./components/views/FormView.ts";
 
 const events = new EventEmitter();
 const api = new MainApi(API_URL);
 const catalogModel = new Catalog(events);
 const basketModel = new Basket(events);
+const customerModel = new Customer(events);
 
 const headerView = new HeaderView(ensureElement<HTMLElement>('.header'), events);
 const galleryView = new GalleryView(ensureElement<HTMLElement>('.page__wrapper'));
@@ -119,3 +120,7 @@ events.on('basket:order', () => {
     modalView.render({ content: formOrderView.render() });
     modalView.open();
 });
+
+events.on('customer-model:update', (data: Partial<ICustomer>) => {
+    customerModel. .setBuyerData(data);
+})

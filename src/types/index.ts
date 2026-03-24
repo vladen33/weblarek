@@ -62,3 +62,10 @@ export interface IBasketData {
 export interface ICardData extends Partial<IProduct> {
     index?: number;
 }
+
+export interface ICustomer {
+    paymentType: TPayment;
+    email: string;
+    phone: string;
+    address: string;
+}
