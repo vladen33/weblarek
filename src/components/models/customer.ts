@@ -2,74 +2,75 @@ import {ICustomer, TPayment} from '../../types/index';
 import {IEvents} from "../base/Events.ts";
 
 export class Customer implements ICustomer {
-    paymentType: TPayment = '';
-    address: string = '';
-    email: string = '';
-    phone: string = '';
+    customerData: ICustomer;
 
     constructor(protected events: IEvents) {
-        this.paymentType = 'card';
+        this.customerData = {
+            paymentType: 'card',
+            address: '',
+            email: '',
+            phone: ''
+        }
+    }
+
+    set paymentType(paymentType: TPayment) {
+        this.customerData.paymentType = paymentType;
+    }
+    set address(address: string) {
+        this.customerData.address = address;
+    }
+    set email(email: string) {
+        this.customerData.email = email;
+    }
+    set phone(phone: string) {
+        this.customerData.phone = phone;
+    }
+    get paymentType(): TPayment {
+        return this.customerData.paymentType;
+    }
+    get address(): string {
+        return this.customerData.address;
+    }
+    get email(): string {
+        return this.customerData.email;
+    }
+    get phone(): string {
+        return this.customerData.phone;
+    }
+    setAllCustomerData(data: Partial<ICustomer>): void {
+        Object.assign(this.customerData, data);
+        this.events.emit('customer-model:has-updated');
+    }
+    getAllCustomerData(): ICustomer {
+        return this.customerData;
+    }  
+    clearAllCustomerData(): void {
+        this.paymentType = '';
         this.address = '';
         this.email = '';
         this.phone = '';
     }
-
-    setPayment(paymentType: TPayment): void {
-        this.paymentType = paymentType;
-    }
-    setAddress(address: string): void {
-        this.address = address;
-    }
-    setEmail(email: string): void {
-        this.email = email;
-    }
-    setPhone(phone: string): void {
-        this.phone = phone;
-    }
-    getPayment(): TPayment {
-        return this.paymentType;
-    }
-    getAddress(): string {
-        return this.address;
-    }
-    getEmail(): string {
-        return this.email;
-    }
-    getPhone(): string {
-        return this.phone;
-    }
-    setAllFields(data: Partial<ICustomer>): void {
-        Object.assign(this.getAllFields(), data);
-        this.events.emit('customer-model:has-updated');
-    }
-    getAllFields(): ICustomer {
-        return {
-            paymentType: this.getPayment(),
-            address: this.getAddress(),
-            email: this.getEmail(),
-            phone: this.getPhone()
-        }
-    }  
-    clearAllFields(): void {
-        this.setPayment('');
-        this.setAddress('');
-        this.setEmail('');
-        this.setPhone('');
-    }
-    validateFields(): Record<string, string> {
+    validateCustomerData(): Record<string, string> {
         const errors: Record<string, string> = {};
-        if (this.paymentType === '') {
+        if (this.customerData.paymentType === '') {
             errors.payment = 'Не выбран тип платежа';
         }
-        if (this.address === '') {
+        if (this.customerData.address === '') {
             errors.address = 'Не указан адрес доставки';
         }
-        if (this.email === '') {
+        if (this.customerData.email === '') {
             errors.email = 'Не указан адрес электронной почты';
         }    
-        if (this.phone === '') {
+        if (this.customerData.phone === '') {
             errors.phone = 'Не указан контактный телефон';
         }    
         return errors;
-    }    
+    }
+    checkAddressErrors(): Record<string, string> {
+        const errors: Record<string, string> = {};
+        if (this.customerData.address === '') {
+            errors.address = 'Не указан адрес доставки';
+        }
+        return errors;
+    }
 }

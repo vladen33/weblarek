@@ -12,7 +12,7 @@ import { CardBasketView, CardCatalogView, CardPreviewView } from "./components/v
 import { EventEmitter } from './components/base/Events.ts';
 import { BasketView } from "./components/views/BasketView.ts";
 import {ICustomer, IProduct} from "./types";
-import { FormOrderView } from "./components/views/FormView.ts";
+import { FormContactsView, FormOrderView } from "./components/views/FormView.ts";
 
 const events = new EventEmitter();
 const api = new MainApi(API_URL);
@@ -35,6 +35,8 @@ const successTemplate = ensureElement<HTMLTemplateElement>('#success');
 
 const basketView = new BasketView(cloneTemplate(basketTemplate), events);
 const formOrderView = new FormOrderView(cloneTemplate(formOrderTemplate), events);
+const formContactsView = new FormContactsView(cloneTemplate(formContactsTemplate), events);
+
 // Отрисовка каталога при любом его изменении
 events.on('catalog:change', () => {
     const cardItems = catalogModel.getProductList().map(product => {
@@ -115,12 +117,31 @@ events.on('basket:open', () => {
     modalView.open();
 });
 
-events.on('basket:order', () => {
-    console.log('basket:order');
+events.on('basket:open-order-form', () => {
     modalView.render({ content: formOrderView.render() });
     modalView.open();
+    events.emit('customer-model:has-updated');
+});
+
+events.on('basket:open-contacts-form', () => {
+    modalView.render({ content: formContactsView.render() });
+    modalView.open();
+    //events.emit('customer-model:has-updated');
 });
 
 events.on('customer-model:update', (data: Partial<ICustomer>) => {
-    customerModel. .setBuyerData(data);
+    customerModel.setAllCustomerData(data);
 })
+
+events.on('customer-model:has-updated', () => {
+
+    const customerData = customerModel.getAllCustomerData();
+
+    formOrderView.setPaymentType(customerData?.paymentType ?? 'card');
+    formOrderView.setAddress(customerData?.address ?? '');
+    formOrderView.checkAddress(customerModel.checkAddressErrors())
+
+    //formContactsView.setEmail(customerData?.email ?? '');
+    //formContactsView.setPhone(customerData?.phone ?? '');
+
+});

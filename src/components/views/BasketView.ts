@@ -20,7 +20,7 @@ export class BasketView extends Component<IBasketData> {
 
         this.basketButtonElement.addEventListener('click', (event) => {
             event.stopPropagation();
-            this.events.emit('basket:order');
+            this.events.emit('basket:open-order-form');
         })
     }
 
