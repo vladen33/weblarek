@@ -11,7 +11,7 @@ import { ModalView } from "./components/views/ModalView.ts";
 import { CardBasketView, CardCatalogView, CardPreviewView } from "./components/views/CardView.ts";
 import { EventEmitter } from './components/base/Events.ts';
 import { BasketView } from "./components/views/BasketView.ts";
-import { ICustomer, IProduct } from "./types";
+import {ICustomer, IOrderRequest, IProduct} from "./types";
 import { FormContactsView, FormOrderView, FormSuccessView } from "./components/views/FormView.ts";
 
 const events = new EventEmitter();
@@ -133,13 +133,6 @@ events.on('basket:open-contacts-form', () => {
     //events.emit('customer-model:has-updated');
 });
 
-events.on('basket:make-order', () => {
-    modalView.close();
-    const content = formContactsView.render()
-    modalView.render({ content: content });
-    modalView.open();
-});
-
 events.on('customer-model:update', (data: Partial<ICustomer>) => {
     customerModel.setAllCustomerData(data);
 })
@@ -155,5 +148,40 @@ events.on('customer-model:has-updated', () => {
     formContactsView.setEmail(customerData?.email ?? '');
     formContactsView.setPhone(customerData?.phone ?? '');
     formContactsView.checkContacts(customerModel.checkContactsErrors());
+});
+
+
+events.on('basket:try-send-order', async () => {
+    const customerData: ICustomer = customerModel.getAllCustomerData();
+
+    if (!customerData) {
+        return;
+    }
+
+    const orderData: IOrderRequest = {
+        paymentType: customerData.paymentType,
+        email: customerData.email,
+        phone: customerData.phone,
+        address: customerData.address,
+        totalPrice: basketModel.getFullPriceOfBasket(),
+        items: basketModel .getProductListFromBasket().map(item => item.id)
+    };
+
+    try {
+        const response = await api.postOrder(orderData);
+        events.emit('basket:success', response);
+    } catch (err) {
+        console.error(err);
+    }
+});
+
+events.on('basket:success', (response: { totalPrice: number }) => {
+    formSuccessView.totalPrice = response.totalPrice;
+    modalView.render({ content: formSuccessView.render() });
+    modalView.open();
+
+    basketModel.clearBasket();
+    headerView.counter = basketModel.getCountProductInBasket();
+    customerModel.clearAllCustomerData();
 
 });

@@ -24,21 +24,21 @@ export interface ICustomer {
 }
 
 export interface IOrderRequest {
-    payment: string,
+    paymentType: string,
     email: string,
     phone: string,
     address: string,
-    total: number,
+    totalPrice: number,
     items: string[]
 }
 
 export interface IOrderResponse {
     id: string,
-    total: number
+    totalPrice: number
 }
 
 export interface ICatalogResponse {
-    total: number;
+    totalProducts: number;
     items: IProduct[];
 }
 
@@ -68,4 +68,8 @@ export interface ICustomer {
     email: string;
     phone: string;
     address: string;
+}
+
+export interface ISuccessData {
+    totalPrice: number;
 }

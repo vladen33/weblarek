@@ -1,7 +1,7 @@
 import { Component } from "../base/Component.ts";
 import { IEvents } from '../base/Events.ts';
 import { ensureElement } from '../../utils/utils.ts';
-import { TPayment } from '../../types';
+import {ISuccessData, TPayment} from '../../types';
 
 export class FormOrderView extends Component<T>{
     protected payByCashNode: HTMLButtonElement;
@@ -99,7 +99,7 @@ export class FormContactsView extends Component<T>{
 
         this.container.addEventListener('submit', (event) => {
             event.preventDefault();
-            this.events.emit('basket:make-order');
+            this.events.emit('basket:try-send-order');
         });
 
         this.emailNode.addEventListener('input', () => {
@@ -148,11 +148,18 @@ export class FormContactsView extends Component<T>{
 }
 
 
-export class FormSuccessView extends Component<T>{
+export class FormSuccessView extends Component<ISuccessData>{
     protected successDescriptionNode: HTMLElement;
+    protected closeButton: HTMLButtonElement
 
     constructor(container: HTMLElement, protected events: IEvents) {
         super(container);
         this.successDescriptionNode = ensureElement<HTMLElement>('.order-success__description', this.container);
+        this.closeButton = ensureElement<HTMLButtonElement>('.order-success__close', this.container);
     }
+
+    set totalPrice(value: number) {
+        this.successDescriptionNode.textContent = `Списано ${value} синапсов`;
+    };
 }
+
