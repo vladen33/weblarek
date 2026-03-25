@@ -73,4 +73,17 @@ export class Customer implements ICustomer {
         }
         return errors;
     }
+
+    checkContactsErrors(): Record<string, string> {
+        const errors: Record<string, string> = {};
+        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        const email = this.customerData.email.trim();
+        if (email === '' || !regex.test(email)) {
+            errors.email = 'Укажите правильный email-адрес';
+        }
+        if (this.customerData.phone === '') {
+            errors.phone = 'Укажите номер телефона';
+        }
+        return errors;
+    }
 }

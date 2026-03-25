@@ -11,8 +11,8 @@ import { ModalView } from "./components/views/ModalView.ts";
 import { CardBasketView, CardCatalogView, CardPreviewView } from "./components/views/CardView.ts";
 import { EventEmitter } from './components/base/Events.ts';
 import { BasketView } from "./components/views/BasketView.ts";
-import {ICustomer, IProduct} from "./types";
-import { FormContactsView, FormOrderView } from "./components/views/FormView.ts";
+import { ICustomer, IProduct } from "./types";
+import { FormContactsView, FormOrderView, FormSuccessView } from "./components/views/FormView.ts";
 
 const events = new EventEmitter();
 const api = new MainApi(API_URL);
@@ -30,12 +30,14 @@ const cardBasketTemplate = ensureElement<HTMLTemplateElement>('#card-basket');
 const basketTemplate = ensureElement<HTMLTemplateElement>('#basket');
 const formOrderTemplate = ensureElement<HTMLTemplateElement>('#order');
 const formContactsTemplate = ensureElement<HTMLTemplateElement>('#contacts');
-const successTemplate = ensureElement<HTMLTemplateElement>('#success');
+const formSuccessTemplate = ensureElement<HTMLTemplateElement>('#success');
 
 
 const basketView = new BasketView(cloneTemplate(basketTemplate), events);
 const formOrderView = new FormOrderView(cloneTemplate(formOrderTemplate), events);
 const formContactsView = new FormContactsView(cloneTemplate(formContactsTemplate), events);
+const formSuccessView = new FormSuccessView(cloneTemplate(formSuccessTemplate), events);
+
 
 // Отрисовка каталога при любом его изменении
 events.on('catalog:change', () => {
@@ -124,9 +126,18 @@ events.on('basket:open-order-form', () => {
 });
 
 events.on('basket:open-contacts-form', () => {
-    modalView.render({ content: formContactsView.render() });
+    modalView.close();
+    const content = formContactsView.render()
+    modalView.render({ content: content });
     modalView.open();
     //events.emit('customer-model:has-updated');
+});
+
+events.on('basket:make-order', () => {
+    modalView.close();
+    const content = formContactsView.render()
+    modalView.render({ content: content });
+    modalView.open();
 });
 
 events.on('customer-model:update', (data: Partial<ICustomer>) => {
@@ -139,9 +150,10 @@ events.on('customer-model:has-updated', () => {
 
     formOrderView.setPaymentType(customerData?.paymentType ?? 'card');
     formOrderView.setAddress(customerData?.address ?? '');
-    formOrderView.checkAddress(customerModel.checkAddressErrors())
+    formOrderView.checkAddress(customerModel.checkAddressErrors());
 
-    //formContactsView.setEmail(customerData?.email ?? '');
-    //formContactsView.setPhone(customerData?.phone ?? '');
+    formContactsView.setEmail(customerData?.email ?? '');
+    formContactsView.setPhone(customerData?.phone ?? '');
+    formContactsView.checkContacts(customerModel.checkContactsErrors());
 
 });
