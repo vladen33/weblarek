@@ -1,14 +1,41 @@
 import { Component } from "../base/Component.ts";
 import { IEvents } from '../base/Events.ts';
 import { ensureElement } from '../../utils/utils.ts';
-import {ISuccessData, TPayment} from '../../types';
+import { ISuccessData, TPayment } from '../../types';
 
-export class FormOrderView extends Component<T>{
+
+abstract class FormView extends Component<T> {
+    protected submitButton: HTMLButtonElement;
+    protected errorsMessageNode: HTMLElement;
+
+    protected constructor(container: HTMLElement) {
+        super(container);
+        this.submitButton = ensureElement<HTMLButtonElement>('.button[type="submit"]', this.container);
+        this.errorsMessageNode = ensureElement<HTMLElement>('.form__errors', this.container);
+    }
+
+    disableSubmitButton() {
+        this.submitButton.disabled = true;
+    }
+
+    enableSubmitButton() {
+        this.submitButton.disabled = false;
+    }
+
+    outputErrorMessage(message: string) {
+        this.errorsMessageNode.innerText = message;
+    };
+
+    clearErrorMessage() {
+        this.errorsMessageNode.innerText = '';
+    }
+}
+
+
+export class FormOrderView extends FormView{
     protected payByCashNode: HTMLButtonElement;
     protected payByCardNode: HTMLButtonElement;
     protected addressNode: HTMLInputElement;
-    protected submitButton: HTMLButtonElement;
-    protected errorsMessageNode: HTMLElement;
     protected paymentType: TPayment;
 
     constructor(container: HTMLElement, protected events: IEvents) {
@@ -16,8 +43,6 @@ export class FormOrderView extends Component<T>{
         this.payByCardNode = ensureElement<HTMLButtonElement>('.button[name="card"]', this.container);
         this.payByCashNode = ensureElement<HTMLButtonElement>('.button[name="cash"]', this.container);
         this.addressNode = ensureElement<HTMLInputElement>('.form__input[name="address"]', this.container);
-        this.submitButton = ensureElement<HTMLButtonElement>('.order__button', this.container);
-        this.errorsMessageNode = ensureElement<HTMLElement>('.form__errors', this.container);
         this.paymentType = "card";
 
         this.container.addEventListener('submit', (event) => {
@@ -54,22 +79,6 @@ export class FormOrderView extends Component<T>{
         this.addressNode.value = value;
     }
 
-    disableSubmitButton() {
-        this.submitButton.disabled = true;
-    }
-
-    enableSubmitButton() {
-        this.submitButton.disabled = false;
-    }
-
-    outputErrorMessage(message: string) {
-        this.errorsMessageNode.innerText = message;
-    };
-
-    clearErrorMessage() {
-        this.errorsMessageNode.innerText = '';
-    }
-
     checkAddress(errors: Record<string, string>) {
         const errorList: string[] = Object.values(errors);
         if (errorList.length > 0) {
@@ -83,19 +92,14 @@ export class FormOrderView extends Component<T>{
 }
 
 
-
-export class FormContactsView extends Component<T>{
+export class FormContactsView extends FormView{
     protected emailNode: HTMLInputElement;
     protected phoneNode: HTMLInputElement;
-    protected submitButton: HTMLButtonElement;
-    protected errorsMessageNode: HTMLElement;
 
     constructor(container: HTMLElement, protected events: IEvents) {
         super(container);
         this.emailNode = ensureElement<HTMLInputElement>('.form__input[name="email"]', this.container);
         this.phoneNode = ensureElement<HTMLInputElement>('.form__input[name="phone"]', this.container);
-        this.submitButton = ensureElement<HTMLButtonElement>('.button', this.container);
-        this.errorsMessageNode = ensureElement<HTMLElement>('.form__errors', this.container);
 
         this.container.addEventListener('submit', (event) => {
             event.preventDefault();
@@ -116,22 +120,6 @@ export class FormContactsView extends Component<T>{
     }
     setPhone(value: string) {
         this.phoneNode.value = value;
-    }
-
-    disableSubmitButton() {
-        this.submitButton.disabled = true;
-    }
-
-    enableSubmitButton() {
-        this.submitButton.disabled = false;
-    }
-
-    outputErrorMessage(message: string) {
-        this.errorsMessageNode.innerText = message;
-    };
-
-    clearErrorMessage() {
-        this.errorsMessageNode.innerText = '';
     }
 
     checkContacts(errors: Record<string, string>) {

@@ -1,5 +1,5 @@
 import './scss/styles.scss';
-import { API_URL, CDN_URL } from './utils/constants.ts';
+import { API_URL } from './utils/constants.ts';
 import { Basket } from './components/models/basket.ts';
 import { Catalog } from './components/models/catalog.ts';
 import { Customer } from './components/models/customer.ts';
@@ -11,7 +11,7 @@ import { ModalView } from "./components/views/ModalView.ts";
 import { CardBasketView, CardCatalogView, CardPreviewView } from "./components/views/CardView.ts";
 import { EventEmitter } from './components/base/Events.ts';
 import { BasketView } from "./components/views/BasketView.ts";
-import {ICustomer, IOrderRequest, IProduct} from "./types";
+import { ICustomer, IOrderRequest, IProduct } from "./types";
 import { FormContactsView, FormOrderView, FormSuccessView } from "./components/views/FormView.ts";
 
 const events = new EventEmitter();
@@ -46,7 +46,7 @@ events.on('catalog:change', () => {
         return card.render(product);
     })
     galleryView.render({ catalog: cardItems })
-})
+});
 
 // Первоначальная загрузка и отрисовка каталога
 catalogModel.setProductList((await api.getCatalog()).items);
@@ -103,12 +103,10 @@ events.on('basket:update', () => {
     headerView.counter = basketModel.getCountProductInBasket();
 });
 
-
 events.on('product:selected', prod => {
     modalView.render(prod);
     modalView.open();
 });
-
 
 events.on('basket:open', () => {
     const content = basketView.render();
@@ -127,21 +125,17 @@ events.on('basket:open-contacts-form', () => {
     const content = formContactsView.render()
     modalView.render({ content: content });
     modalView.open();
-    //events.emit('customer-model:has-updated');
 });
 
 events.on('customer-model:update', (data: Partial<ICustomer>) => {
     customerModel.setAllCustomerData(data);
-})
+});
 
 events.on('customer-model:has-updated', () => {
-
     const customerData = customerModel.getAllCustomerData();
-
     formOrderView.setPaymentType(customerData?.paymentType ?? 'card');
     formOrderView.setAddress(customerData?.address ?? '');
     formOrderView.checkAddress(customerModel.checkAddressErrors());
-
     formContactsView.setEmail(customerData?.email ?? '');
     formContactsView.setPhone(customerData?.phone ?? '');
     formContactsView.checkContacts(customerModel.checkContactsErrors());
@@ -150,11 +144,9 @@ events.on('customer-model:has-updated', () => {
 
 events.on('basket:try-send-order', async () => {
     const customerData: ICustomer = customerModel.getAllCustomerData();
-
     if (!customerData) {
         return;
     }
-
     const orderData: IOrderRequest = {
         payment: customerData.paymentType,
         email: customerData.email,
@@ -163,7 +155,6 @@ events.on('basket:try-send-order', async () => {
         total: basketModel.getFullPriceOfBasket(),
         items: basketModel .getProductListFromBasket().map(item => item.id)
     };
-
     try {
         const response = await api.postOrder(orderData);
         events.emit('basket:success', response);
@@ -176,7 +167,6 @@ events.on('basket:success', (response: { total: number }) => {
     formSuccessView.totalPrice = response.total;
     modalView.render({ content: formSuccessView.render() });
     modalView.open();
-
     basketModel.clearBasket();
     headerView.counter = basketModel.getCountProductInBasket();
     customerModel.clearAllCustomerData();
@@ -184,4 +174,4 @@ events.on('basket:success', (response: { total: number }) => {
 
 events.on('basket:success-close', () => {
     modalView.close();
-})
+});
