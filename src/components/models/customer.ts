@@ -50,22 +50,7 @@ export class Customer implements ICustomer {
         this.email = '';
         this.phone = '';
     }
-    validateCustomerData(): Record<string, string> {
-        const errors: Record<string, string> = {};
-        if (this.customerData.paymentType === '') {
-            errors.payment = 'Не выбран тип платежа';
-        }
-        if (this.customerData.address === '') {
-            errors.address = 'Не указан адрес доставки';
-        }
-        if (this.customerData.email === '') {
-            errors.email = 'Не указан адрес электронной почты';
-        }    
-        if (this.customerData.phone === '') {
-            errors.phone = 'Не указан контактный телефон';
-        }    
-        return errors;
-    }
+
     checkAddressErrors(): Record<string, string> {
         const errors: Record<string, string> = {};
         if (this.customerData.address === '') {
