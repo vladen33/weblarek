@@ -5,37 +5,37 @@ import {IEvents} from '../base/Events.ts';
 
 
 export class BasketView extends Component<IBasketData> {
-    private basketListElement: HTMLUListElement;
-    private basketButtonElement: HTMLButtonElement;
-    private basketPriceElement: HTMLElement;
+    private basketListNode: HTMLUListElement;
+    private basketButton: HTMLButtonElement;
+    private basketPriceNode: HTMLElement;
 
     constructor(protected readonly container: HTMLElement, protected events: IEvents) {
         super(container);
-        this.basketListElement = ensureElement<HTMLUListElement>('.basket__list', this.container);
-        this.basketButtonElement = ensureElement<HTMLButtonElement>('.basket__button', this.container);
-        this.basketPriceElement = ensureElement<HTMLElement>('.basket__price', this.container);
+        this.basketListNode = ensureElement<HTMLUListElement>('.basket__list', this.container);
+        this.basketButton = ensureElement<HTMLButtonElement>('.basket__button', this.container);
+        this.basketPriceNode = ensureElement<HTMLElement>('.basket__price', this.container);
         this.basket = [];
 
-        this.basketButtonElement.addEventListener('click', (event) => {
+        this.basketButton.addEventListener('click', (event) => {
             event.stopPropagation();
             this.events.emit('basket:open-order-form');
         })
     }
 
     set totalPrice(value: number) {
-        this.basketPriceElement.textContent = `${value} синапсов`;
+        this.basketPriceNode.textContent = `${value} синапсов`;
     };
 
     set basket(items: HTMLElement[]) {
-        this.basketButtonElement.textContent = 'Оформить';
+        this.basketButton.textContent = 'Оформить';
         if (items.length > 0) {
-            this.basketButtonElement.disabled = false;
-            this.basketListElement.replaceChildren(...items);
+            this.basketButton.disabled = false;
+            this.basketListNode.replaceChildren(...items);
         } else {
             const message = document.createElement('p');
             message.textContent = 'Корзина пуста';
-            this.basketButtonElement.disabled = true;
-            this.basketListElement.replaceChildren(message);
+            this.basketButton.disabled = true;
+            this.basketListNode.replaceChildren(message);
         }
     };
 

@@ -3,15 +3,15 @@ import { IModalData } from '../../types';
 import { ensureElement } from '../../utils/utils.ts';
 
 export class ModalView extends Component<IModalData> {
-    private modalCloseButtonElement: HTMLButtonElement | null;
-    private modalContentElement: HTMLElement | null;
+    private modalCloseButton: HTMLButtonElement | null;
+    private modalContentNode: HTMLElement | null;
 
     constructor(protected readonly container: HTMLElement) {
         super(container);
-        this.modalCloseButtonElement = ensureElement<HTMLButtonElement>('.modal__close', this.container);
-        this.modalContentElement = ensureElement<HTMLElement>('.modal__content', this.container);
+        this.modalCloseButton = ensureElement<HTMLButtonElement>('.modal__close', this.container);
+        this.modalContentNode = ensureElement<HTMLElement>('.modal__content', this.container);
 
-        this.modalCloseButtonElement.addEventListener('click', () => {
+        this.modalCloseButton.addEventListener('click', () => {
             this.close();
         });
         this.container.addEventListener('click', (event) => {
@@ -22,13 +22,9 @@ export class ModalView extends Component<IModalData> {
     }
 
     set content(content: HTMLElement) {
-        if (this.modalContentElement) {
-            this.modalContentElement.replaceChildren(content);
+        if (this.modalContentNode) {
+            this.modalContentNode.replaceChildren(content);
         }
-    }
-
-    render(data?: Partial<IModalData>): HTMLElement {
-        return super.render(data);
     }
 
     open(): void {
