@@ -24,11 +24,11 @@ export interface ICustomer {
 }
 
 export interface IOrderRequest {
-    paymentType: string,
+    payment: string,
     email: string,
     phone: string,
     address: string,
-    totalPrice: number,
+    total: number,
     items: string[]
 }
 

@@ -73,7 +73,6 @@ events.on('product:show', (event: {id: string}) => {
 
 // Добавляет переданный продукт в корзину
 events.on('basket:product-add', (event: {id: string}) => {
-    console.log('basket:product-add=> ', event.id)
     const product = catalogModel.getProductById(event.id);
     if (!product) {
         return;
@@ -83,7 +82,6 @@ events.on('basket:product-add', (event: {id: string}) => {
 
 // Удаляет переданный продукт из корзины
 events.on('basket:product-delete', (event: {id: string}) => {
-    console.log('basket:product-delete=> ', event.id)
     const product = catalogModel.getProductById(event.id);
     if (!product) {
         return;
@@ -92,7 +90,6 @@ events.on('basket:product-delete', (event: {id: string}) => {
 });
 
 events.on('basket:update', () => {
-    console.log('basket:update');
     const productsInBasketList: IProduct[] = [...basketModel.getProductListFromBasket()];
     const basketListItems = productsInBasketList.map((item, index) => {
         const basketProduct = new CardBasketView(cloneTemplate(cardBasketTemplate), events);
@@ -159,11 +156,11 @@ events.on('basket:try-send-order', async () => {
     }
 
     const orderData: IOrderRequest = {
-        paymentType: customerData.paymentType,
+        payment: customerData.paymentType,
         email: customerData.email,
         phone: customerData.phone,
         address: customerData.address,
-        totalPrice: basketModel.getFullPriceOfBasket(),
+        total: basketModel.getFullPriceOfBasket(),
         items: basketModel .getProductListFromBasket().map(item => item.id)
     };
 
@@ -175,13 +172,16 @@ events.on('basket:try-send-order', async () => {
     }
 });
 
-events.on('basket:success', (response: { totalPrice: number }) => {
-    formSuccessView.totalPrice = response.totalPrice;
+events.on('basket:success', (response: { total: number }) => {
+    formSuccessView.totalPrice = response.total;
     modalView.render({ content: formSuccessView.render() });
     modalView.open();
 
     basketModel.clearBasket();
     headerView.counter = basketModel.getCountProductInBasket();
     customerModel.clearAllCustomerData();
-
 });
+
+events.on('basket:success-close', () => {
+    modalView.close();
+})

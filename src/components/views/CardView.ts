@@ -107,7 +107,6 @@ export class CardPreviewView extends CardCatalogView{
     }
 
     render(data: IProduct, inBasket = false): HTMLElement {
-        console.log('product:show dataprice => ', data.price)
         this.id = data.id;
         this.inBasket = inBasket;
 
