@@ -9,13 +9,11 @@ import { IProduct } from '../../types';
 export abstract class CardBaseView extends Component<T>{
     protected titleNode: HTMLElement;
     protected priceNode: HTMLElement;
-    protected id: string;
 
     protected constructor(container: HTMLElement) {
         super(container);
         this.titleNode = ensureElement<HTMLElement>('.card__title', this.container);
         this.priceNode = ensureElement<HTMLElement>('.card__price', this.container);
-        this.id = '';
     }
 
     set title(titleValue: string) {
@@ -36,15 +34,16 @@ export class CardBasketView extends CardBaseView{
     protected indexElement: HTMLElement;
     protected deleteButtonElement: HTMLButtonElement;
 
-    constructor(container: HTMLElement, events: IEvents) {
+    constructor(container: HTMLElement, actions) {
         super(container);
         this.indexElement = ensureElement<HTMLElement>('.basket__item-index', this.container);
         this.deleteButtonElement = ensureElement<HTMLButtonElement>('.basket__item-delete', this.container);
 
-        this.deleteButtonElement.addEventListener('click', (event) => {
-            event.stopPropagation();
-            events.emit('basket:product-delete', {id: this.id})
-        })
+        this.deleteButtonElement.addEventListener('click', actions.onDelete
+            // (event) => {
+            // event.stopPropagation();
+            // events.emit('basket:product-delete', {id: this.id})}
+        )
     }
 
     set index(indexValue: string) {
@@ -56,14 +55,12 @@ export class CardCatalogView extends CardBaseView{
     protected imageNode: HTMLImageElement;
     protected categoryNode: HTMLElement;
 
-    constructor(container: HTMLElement, protected events: IEvents) {
+    constructor(container: HTMLElement, actions) {
         super(container);
         this.imageNode = ensureElement<HTMLImageElement>('.card__image', this.container);
         this.categoryNode = ensureElement<HTMLElement>('.card__category', this.container);
 
-        this.container.addEventListener('click', () => {
-            this.events.emit('product:show', { product: this.product });
-        });
+        this.container.addEventListener('click', actions.onClick)
     }
 
     set image(imageName: string) {
@@ -73,17 +70,12 @@ export class CardCatalogView extends CardBaseView{
     set category(categoryName: string) {
         this.categoryNode.textContent = categoryName;
     }
-
-    render(data?: Partial<T>): HTMLElement {
-        // this.id = data.id;
-        return super.render(data);
-    }
 }
 
 export class CardPreviewView extends CardCatalogView{
     protected textNode: HTMLElement;
     protected buttonNode: HTMLButtonElement;
-    protected inBasket: boolean = false;
+
 
     constructor(container: HTMLElement, protected events: IEvents) {
         super(container, events);
@@ -92,13 +84,7 @@ export class CardPreviewView extends CardCatalogView{
 
         this.buttonNode.addEventListener('click', (event) => {
             event.stopPropagation();
-            this.inBasket = !this.inBasket;
-            this.buttonNode.textContent = this.inBasket ? 'Удалить из корзины' : 'Купить';
-            if (this.inBasket) {
-                this.events.emit('basket:product-add', {id: this.id});
-            } else {
-                this.events.emit('basket:product-delete', {id: this.id});
-            }
+            this.events.emit('preview:toggle');
         });
     }
 
@@ -106,19 +92,20 @@ export class CardPreviewView extends CardCatalogView{
         this.textNode.textContent = textValue;
     }
 
-    render(data: IProduct, inBasket = false): HTMLElement {
-        this.id = data.id;
-        this.inBasket = inBasket;
+    setButtonCaptionDelete() {
+        this.buttonNode.disabled = false;
+        this.buttonNode.textContent = 'Удалить из корзины';
 
-        if (data.price === null) {
-            this.buttonNode.disabled = true;
-            this.buttonNode.textContent = 'Недоступно';
-        } else {
-            this.buttonNode.disabled = false;
-            this.buttonNode.textContent = this.inBasket ? 'Удалить из корзины' : 'Купить';
-        }
+    }
 
-        return super.render(data);
+    setButtonCaptionBuy() {
+        this.buttonNode.disabled = false;
+        this.buttonNode.textContent = 'Купить';
+    }
+
+    setButtonCaptionNotAvailable() {
+        this.buttonNode.disabled = true;
+        this.buttonNode.textContent = 'Недоступно';
     }
 }
 

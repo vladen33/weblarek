@@ -12,7 +12,7 @@ export class Catalog {
 
     setProductList(arr: IProduct[]): void {
         this.productList = arr;
-        this.events.emit('catalog:changed');
+        this.events.emit('catalog:change');
     }
     getProductList(): IProduct[] {
         return this.productList;

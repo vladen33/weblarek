@@ -39,56 +39,65 @@ const formContactsView = new FormContactsView(cloneTemplate(formContactsTemplate
 const formSuccessView = new FormSuccessView(cloneTemplate(formSuccessTemplate), events);
 
 
+// Первоначальная загрузка и отрисовка каталога
+async function init() {
+    try {
+        catalogModel.setProductList((await api.getCatalog()).items);
+    } catch (error) {
+        console.log('Ошибка при получении данных с сервера: ', error);
+    }
+}
+
 // Отрисовка каталога при любом его изменении
 events.on('catalog:change', () => {
     const cardItems = catalogModel.getProductList().map(product => {
-        const card = new CardCatalogView(cloneTemplate(cardCatalogTemplate), events);
-        card.product = product;
+        const card = new CardCatalogView(cloneTemplate(cardCatalogTemplate), {
+                onClick: () => catalogModel.setSelectedProduct(product)
+                // events.emit('product:show', { product })
+            }
+        );
         return card.render(product);
     })
     galleryView.render({ catalog: cardItems })
 });
 
-// Первоначальная загрузка и отрисовка каталога
-catalogModel.setProductList((await api.getCatalog()).items);
-events.emit('catalog:change');
 
 // Вывод карточки в модальном окне при выборе какой-либо карточки в каталоге в качестве текущей
 events.on('product:show', (event: {product: IProduct}) => {
-    // const product = catalogModel.getProductById(event.id);
     if (!event.product) {
         return;
     }
-    const isProductInBasket = basketModel.isProductInBasket(event.product);
     const cardPreview = new CardPreviewView(cloneTemplate(cardPreviewTemplate), events);
-    modalView.render({
-        content: cardPreview.render(event.product, isProductInBasket)
-    });
+    modalView.render({content: cardPreview.render(event.product)});
+    if (event.product.price === null) {
+        cardPreview.setButtonCaptionNotAvailable();
+    } else {
+        if (basketModel.isProductInBasket(event.product)) {
+            cardPreview.setButtonCaptionDelete();
+        } else {
+            cardPreview.setButtonCaptionBuy();
+        }
+    }
     modalView.open();
 });
 
-// Добавляет переданный продукт в корзину
-events.on('basket:product-add', (event: {id: string}) => {
-    const product = catalogModel.getProductById(event.id);
-    if (!product) {
-        return;
-    }
-    basketModel.addProductToBasket(product);
-});
+events.on('preview:toggle', () => {
+    const product = catalogModel.getSelectedProduct();
 
-// Удаляет переданный продукт из корзины
-events.on('basket:product-delete', (event: {id: string}) => {
-    const product = catalogModel.getProductById(event.id);
-    if (!product) {
-        return;
+    if (product && basketModel.isProductInBasket(product)) {
+        basketModel.removeProductFromBasket(product);
+    } else if (product) {
+        basketModel.addProductToBasket(product);
     }
-    basketModel.removeProductFromBasket(product);
-});
+    modalView.close();
+})
 
 events.on('basket:update', () => {
     const productsInBasketList: IProduct[] = [...basketModel.getProductListFromBasket()];
     basketView.basket = productsInBasketList.map((item, index) => {
-        const basketProduct = new CardBasketView(cloneTemplate(cardBasketTemplate), events);
+        const basketProduct = new CardBasketView(cloneTemplate(cardBasketTemplate), {
+            onDelete: () => basketModel.removeProductFromBasket(item),
+        });
         basketProduct.index = (index + 1).toString();
         basketProduct.title = item.title;
         basketProduct.price = item.price === null ? null : item.price.toString();
@@ -108,7 +117,6 @@ events.on('basket:open-order-form', () => {
     const cont = formOrderView.render();
     modalView.render({ content: cont });
     modalView.open();
-    events.emit('customer-model:has-updated');
 });
 
 events.on('basket:open-contacts-form', () => {
@@ -166,3 +174,5 @@ events.on('basket:success', (response: { total: number }) => {
 events.on('basket:success-close', () => {
     modalView.close();
 });
+
+await init();
