@@ -1,7 +1,7 @@
 import { Component } from "../base/Component.ts";
 import { IEvents } from '../base/Events.ts';
 import { ensureElement } from '../../utils/utils.ts';
-import { ISuccessData, TPayment } from '../../types';
+import { ISuccessData, TPayment, TCustomerErrors } from '../../types';
 
 
 abstract class FormView extends Component<T> {
@@ -75,7 +75,7 @@ export class FormOrderView extends FormView{
         this.addressInputNode.value = value;
     }
 
-    checkAddress(errors: Record<string, string>) {
+    checkAddress(errors: TCustomerErrors) {
         const errorList: string[] = Object.values(errors);
         if (errorList.length > 0) {
             this.outputErrorMessage(errorList.join(', '));
@@ -118,7 +118,7 @@ export class FormContactsView extends FormView{
         this.phoneInputNode.value = value;
     }
 
-    checkContacts(errors: Record<string, string>) {
+    checkContacts(errors: TCustomerErrors) {
         const errorList: string[] = Object.values(errors);
         if (errorList.length > 0) {
             const mess = errorList.join(', ')

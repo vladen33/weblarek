@@ -30,24 +30,41 @@ export class Customer {
         }
     }
 
-    checkAddressErrors(): TCustomerErrors {
+    // checkAddressErrors(): TCustomerErrors {
+    //     const errors: TCustomerErrors = {};
+    //     if (this.customerData.payment === '') {
+    //         errors.payment = 'Не указан способ оплаты';
+    //     }
+    //     if (this.customerData.address === '') {
+    //         errors.address = 'Не указан адрес доставки';
+    //     }
+    //     return errors;
+    // }
+    //
+    // checkContactsErrors(): TCustomerErrors {
+    //     const errors: TCustomerErrors = {};
+    //     const email = this.customerData.email.trim();
+    //     if (email === '') {
+    //         errors.email = 'Укажите email-адрес';
+    //     }
+    //     if (this.customerData.phone === '') {
+    //         errors.phone = 'Укажите номер телефона';
+    //     }
+    //     return errors;
+    // }
+
+    checkErrors(): TCustomerErrors {
         const errors: TCustomerErrors = {};
         if (this.customerData.payment === '') {
             errors.payment = 'Не указан способ оплаты';
         }
-        if (this.customerData.address === '') {
+        if (this.customerData.address.trim() === '') {
             errors.address = 'Не указан адрес доставки';
         }
-        return errors;
-    }
-
-    checkContactsErrors(): TCustomerErrors {
-        const errors: TCustomerErrors = {};
-        const email = this.customerData.email.trim();
-        if (email === '') {
+        if (this.customerData.email.trim() === '') {
             errors.email = 'Укажите email-адрес';
         }
-        if (this.customerData.phone === '') {
+        if (this.customerData.phone.trim() === '') {
             errors.phone = 'Укажите номер телефона';
         }
         return errors;

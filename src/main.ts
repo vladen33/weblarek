@@ -126,10 +126,10 @@ events.on('customer-model:has-updated', () => {
     const customerData = customerModel.getAllCustomerData();
     formOrderView.setPayment(customerData?.payment ?? '');
     formOrderView.setAddress(customerData?.address ?? '');
-    formOrderView.checkAddress(customerModel.checkAddressErrors());
+    formOrderView.checkAddress(customerModel.checkErrors());
     formContactsView.setEmail(customerData?.email ?? '');
     formContactsView.setPhone(customerData?.phone ?? '');
-    formContactsView.checkContacts(customerModel.checkContactsErrors());
+    formContactsView.checkContacts(customerModel.checkErrors());
 });
 
 
