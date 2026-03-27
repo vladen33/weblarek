@@ -16,29 +16,27 @@ export interface IProduct {
 
 export type TPayment = 'card' | 'cash' | '';
 
+export type TCustomerErrors = Partial<Record<keyof ICustomer, string>>
+
 export interface ICustomer {
-    paymentType: TPayment;
+    payment: TPayment;
     address: string;
     email: string;
     phone: string;
 }
 
-export interface IOrderRequest {
-    payment: string,
-    email: string,
-    phone: string,
-    address: string,
+export interface IOrderRequest extends ICustomer{
     total: number,
     items: string[]
 }
 
 export interface IOrderResponse {
     id: string,
-    totalPrice: number
+    total: number
 }
 
 export interface ICatalogResponse {
-    totalProducts: number;
+    total: number;
     items: IProduct[];
 }
 
@@ -63,13 +61,7 @@ export interface ICardData extends Partial<IProduct> {
     index?: number;
 }
 
-export interface ICustomer {
-    paymentType: TPayment;
-    email: string;
-    phone: string;
-    address: string;
-}
-
 export interface ISuccessData {
     totalPrice: number;
 }
+

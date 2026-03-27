@@ -62,7 +62,7 @@ export class CardCatalogView extends CardBaseView{
         this.categoryNode = ensureElement<HTMLElement>('.card__category', this.container);
 
         this.container.addEventListener('click', () => {
-            this.events.emit('product:show', { id: this.id });
+            this.events.emit('product:show', { product: this.product });
         });
     }
 
@@ -75,7 +75,7 @@ export class CardCatalogView extends CardBaseView{
     }
 
     render(data?: Partial<T>): HTMLElement {
-        this.id = data.id;
+        // this.id = data.id;
         return super.render(data);
     }
 }

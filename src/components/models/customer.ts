@@ -1,42 +1,19 @@
-import {ICustomer, TPayment} from '../../types/index';
+import {ICustomer, TCustomerErrors} from '../../types/index';
 import {IEvents} from "../base/Events.ts";
 
-export class Customer implements ICustomer {
-    customerData: ICustomer;
+
+export class Customer {
+    protected customerData: ICustomer;
 
     constructor(protected events: IEvents) {
         this.customerData = {
-            paymentType: 'card',
+            payment: 'card',
             address: '',
             email: '',
             phone: ''
         }
     }
 
-    set paymentType(paymentType: TPayment) {
-        this.customerData.paymentType = paymentType;
-    }
-    set address(address: string) {
-        this.customerData.address = address;
-    }
-    set email(email: string) {
-        this.customerData.email = email;
-    }
-    set phone(phone: string) {
-        this.customerData.phone = phone;
-    }
-    get paymentType(): TPayment {
-        return this.customerData.paymentType;
-    }
-    get address(): string {
-        return this.customerData.address;
-    }
-    get email(): string {
-        return this.customerData.email;
-    }
-    get phone(): string {
-        return this.customerData.phone;
-    }
     setAllCustomerData(data: Partial<ICustomer>): void {
         Object.assign(this.customerData, data);
         this.events.emit('customer-model:has-updated');
@@ -45,26 +22,27 @@ export class Customer implements ICustomer {
         return this.customerData;
     }  
     clearAllCustomerData(): void {
-        this.paymentType = '';
-        this.address = '';
-        this.email = '';
-        this.phone = '';
+        this.customerData = {
+            payment: '',
+            address: '',
+            email: '',
+            phone: ''
+        }
     }
 
-    checkAddressErrors(): Record<string, string> {
-        const errors: Record<string, string> = {};
+    checkAddressErrors(): TCustomerErrors {
+        const errors: TCustomerErrors = {};
         if (this.customerData.address === '') {
             errors.address = 'Не указан адрес доставки';
         }
         return errors;
     }
 
-    checkContactsErrors(): Record<string, string> {
-        const errors: Record<string, string> = {};
-        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    checkContactsErrors(): TCustomerErrors {
+        const errors: TCustomerErrors = {};
         const email = this.customerData.email.trim();
-        if (email === '' || !regex.test(email)) {
-            errors.email = 'Укажите правильный email-адрес';
+        if (email === '') {
+            errors.email = 'Укажите email-адрес';
         }
         if (this.customerData.phone === '') {
             errors.phone = 'Укажите номер телефона';

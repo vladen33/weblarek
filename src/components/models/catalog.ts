@@ -20,10 +20,10 @@ export class Catalog {
     getProductById(id: string): IProduct | undefined {
         return this.productList.find(prod => prod.id === id);
     }
-    setSelectedProduct(id: string): void {
-        const product = this.getProductById(id);
+    setSelectedProduct(product: IProduct): void {
+        //const product = this.getProductById(id);
         this.selectedProduct = product ?? null;
-        this.events.emit('product:show', { id });
+        this.events.emit('product:show', { product });
     }
     getSelectedProduct(): IProduct | null {
         return this.selectedProduct;

@@ -43,6 +43,7 @@ const formSuccessView = new FormSuccessView(cloneTemplate(formSuccessTemplate), 
 events.on('catalog:change', () => {
     const cardItems = catalogModel.getProductList().map(product => {
         const card = new CardCatalogView(cloneTemplate(cardCatalogTemplate), events);
+        card.product = product;
         return card.render(product);
     })
     galleryView.render({ catalog: cardItems })
@@ -53,15 +54,15 @@ catalogModel.setProductList((await api.getCatalog()).items);
 events.emit('catalog:change');
 
 // Вывод карточки в модальном окне при выборе какой-либо карточки в каталоге в качестве текущей
-events.on('product:show', (event: {id: string}) => {
-    const product = catalogModel.getProductById(event.id);
-    if (!product) {
+events.on('product:show', (event: {product: IProduct}) => {
+    // const product = catalogModel.getProductById(event.id);
+    if (!event.product) {
         return;
     }
-    const isProductInBasket = basketModel.isProductInBasket(product);
+    const isProductInBasket = basketModel.isProductInBasket(event.product);
     const cardPreview = new CardPreviewView(cloneTemplate(cardPreviewTemplate), events);
     modalView.render({
-        content: cardPreview.render(product, isProductInBasket)
+        content: cardPreview.render(event.product, isProductInBasket)
     });
     modalView.open();
 });
@@ -122,7 +123,7 @@ events.on('customer-model:update', (data: Partial<ICustomer>) => {
 
 events.on('customer-model:has-updated', () => {
     const customerData = customerModel.getAllCustomerData();
-    formOrderView.setPaymentType(customerData?.paymentType ?? 'card');
+    formOrderView.setPayment(customerData?.payment ?? 'card');
     formOrderView.setAddress(customerData?.address ?? '');
     formOrderView.checkAddress(customerModel.checkAddressErrors());
     formContactsView.setEmail(customerData?.email ?? '');
@@ -137,7 +138,7 @@ events.on('basket:try-send-order', async () => {
         return;
     }
     const orderData: IOrderRequest = {
-        payment: customerData.paymentType,
+        payment: customerData.payment,
         email: customerData.email,
         phone: customerData.phone,
         address: customerData.address,

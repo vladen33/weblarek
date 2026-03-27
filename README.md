@@ -342,10 +342,10 @@ export interface IOrderResponse {
 - `payByCashButton` - кнопка для выбора оплаты наличными
 - `payByCardButton` - кнопка для выбора оплаты картой
 - `addressInputNode` - DOM-элемент для ввода адреса доставки
-- `paymentType` - переменная для хранения типа платежа
+- `payment` - переменная для хранения типа платежа
 
 Методы класса:
-- `setPaymentType(value: TPayment)` - настройка отображения кнопок для визуализации выбранного типа платежа
+- `setPayment(value: TPayment)` - настройка отображения кнопок для визуализации выбранного типа платежа
 - `setAddress(value: string)` - запись в DOM-элемент текущего значения адреса доставки
 - `checkAddress(errors: Record<string, string>)` - проверка правильности адреса. Если адрес неправильны, то вывод ошибки
 
