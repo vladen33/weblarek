@@ -16,14 +16,14 @@ export interface IProduct {
 
 export type TPayment = 'card' | 'cash' | '';
 
-export type TCustomerErrors = Partial<Record<keyof ICustomer, string>>
-
 export interface ICustomer {
     payment: TPayment;
     address: string;
     email: string;
     phone: string;
 }
+
+export type TCustomerErrors = Partial<Record<keyof ICustomer, string>>
 
 export interface IOrderRequest extends ICustomer{
     total: number,

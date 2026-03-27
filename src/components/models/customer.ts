@@ -7,7 +7,7 @@ export class Customer {
 
     constructor(protected events: IEvents) {
         this.customerData = {
-            payment: 'card',
+            payment: '',
             address: '',
             email: '',
             phone: ''
@@ -32,6 +32,9 @@ export class Customer {
 
     checkAddressErrors(): TCustomerErrors {
         const errors: TCustomerErrors = {};
+        if (this.customerData.payment === '') {
+            errors.payment = 'Не указан способ оплаты';
+        }
         if (this.customerData.address === '') {
             errors.address = 'Не указан адрес доставки';
         }

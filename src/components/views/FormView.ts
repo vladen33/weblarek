@@ -36,14 +36,12 @@ export class FormOrderView extends FormView{
     protected payByCashButton: HTMLButtonElement;
     protected payByCardButton: HTMLButtonElement;
     protected addressInputNode: HTMLInputElement;
-    protected payment: TPayment;
 
     constructor(container: HTMLElement, protected events: IEvents) {
         super(container);
         this.payByCardButton = ensureElement<HTMLButtonElement>('.button[name="card"]', this.container);
         this.payByCashButton = ensureElement<HTMLButtonElement>('.button[name="cash"]', this.container);
         this.addressInputNode = ensureElement<HTMLInputElement>('.form__input[name="address"]', this.container);
-        this.payment = "card";
 
         this.container.addEventListener('submit', (event) => {
             event.preventDefault();
@@ -51,13 +49,11 @@ export class FormOrderView extends FormView{
         });
 
         this.payByCardButton.addEventListener('click', () => {
-            this.payment = 'card';
-            this.events.emit('customer-model:update', { payment: this.payment });
+            this.events.emit('customer-model:update', { payment: 'card' });
         });
 
         this.payByCashButton.addEventListener('click', () => {
-            this.payment = 'cash';
-            this.events.emit('customer-model:update', {payment: this.payment});
+            this.events.emit('customer-model:update', {payment: 'cash'});
         });
 
         this.addressInputNode.addEventListener('input', () => {
@@ -69,7 +65,7 @@ export class FormOrderView extends FormView{
         if (value === 'card') {
             this.payByCardButton.classList.add('button_alt-active');
             this.payByCashButton.classList.remove('button_alt-active');
-        } else {
+        } else if (value === 'cash') {
             this.payByCardButton.classList.remove('button_alt-active');
             this.payByCashButton.classList.add('button_alt-active');
         }

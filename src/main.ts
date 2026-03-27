@@ -105,7 +105,8 @@ events.on('basket:open', () => {
 });
 
 events.on('basket:open-order-form', () => {
-    modalView.render({ content: formOrderView.render() });
+    const cont = formOrderView.render();
+    modalView.render({ content: cont });
     modalView.open();
     events.emit('customer-model:has-updated');
 });
@@ -123,7 +124,7 @@ events.on('customer-model:update', (data: Partial<ICustomer>) => {
 
 events.on('customer-model:has-updated', () => {
     const customerData = customerModel.getAllCustomerData();
-    formOrderView.setPayment(customerData?.payment ?? 'card');
+    formOrderView.setPayment(customerData?.payment ?? '');
     formOrderView.setAddress(customerData?.address ?? '');
     formOrderView.checkAddress(customerModel.checkAddressErrors());
     formContactsView.setEmail(customerData?.email ?? '');
