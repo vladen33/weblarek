@@ -24,7 +24,7 @@ export class BasketView extends Component<IBasketData> {
 
     set totalPrice(value: number) {
         this.basketPriceNode.textContent = `${value} синапсов`;
-    };
+    }
 
     set basket(items: HTMLElement[]) {
         this.basketButton.textContent = 'Оформить';
@@ -32,14 +32,8 @@ export class BasketView extends Component<IBasketData> {
             this.basketButton.disabled = false;
             this.basketListNode.replaceChildren(...items);
         } else {
-            const message = document.createElement('p');
-            message.textContent = 'Корзина пуста';
             this.basketButton.disabled = true;
-            this.basketListNode.replaceChildren(message);
+            this.basketListNode.replaceChildren();
         }
-    };
-
-    render(data?: Partial<IBasketData>): HTMLElement {
-        return super.render(data);
     }
 }

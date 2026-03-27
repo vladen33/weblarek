@@ -30,42 +30,19 @@ export class Customer {
         }
     }
 
-    // checkAddressErrors(): TCustomerErrors {
-    //     const errors: TCustomerErrors = {};
-    //     if (this.customerData.payment === '') {
-    //         errors.payment = 'Не указан способ оплаты';
-    //     }
-    //     if (this.customerData.address === '') {
-    //         errors.address = 'Не указан адрес доставки';
-    //     }
-    //     return errors;
-    // }
-    //
-    // checkContactsErrors(): TCustomerErrors {
-    //     const errors: TCustomerErrors = {};
-    //     const email = this.customerData.email.trim();
-    //     if (email === '') {
-    //         errors.email = 'Укажите email-адрес';
-    //     }
-    //     if (this.customerData.phone === '') {
-    //         errors.phone = 'Укажите номер телефона';
-    //     }
-    //     return errors;
-    // }
-
-    checkErrors(): TCustomerErrors {
+    checkErrors(checkFields: string[]): TCustomerErrors {
         const errors: TCustomerErrors = {};
-        if (this.customerData.payment === '') {
-            errors.payment = 'Не указан способ оплаты';
+        if (this.customerData.payment === '' && checkFields.includes('payment')) {
+            errors.payment = 'Не выбран способ оплаты';
         }
-        if (this.customerData.address.trim() === '') {
+        if (this.customerData.address.trim() === '' && checkFields.includes('address')) {
             errors.address = 'Не указан адрес доставки';
         }
-        if (this.customerData.email.trim() === '') {
-            errors.email = 'Укажите email-адрес';
+        if (this.customerData.email.trim() === '' && checkFields.includes('email')) {
+            errors.email = 'Не указан email-адрес';
         }
-        if (this.customerData.phone.trim() === '') {
-            errors.phone = 'Укажите номер телефона';
+        if (this.customerData.phone.trim() === '' && checkFields.includes('phone')) {
+            errors.phone = 'Не указан номер телефона';
         }
         return errors;
     }

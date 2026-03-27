@@ -21,7 +21,6 @@ export class Catalog {
         return this.productList.find(prod => prod.id === id);
     }
     setSelectedProduct(product: IProduct): void {
-        //const product = this.getProductById(id);
         this.selectedProduct = product ?? null;
         this.events.emit('product:show', { product });
     }

@@ -29,6 +29,17 @@ abstract class FormView extends Component<T> {
     clearErrorMessage() {
         this.errorsMessageNode.innerText = '';
     }
+
+    checkFormErrors(errors: TCustomerErrors) {
+        const errorList: string[] = Object.values(errors);
+        if (errorList.length > 0) {
+            this.outputErrorMessage(errorList.join(', '));
+            this.disableSubmitButton();
+        } else {
+            this.clearErrorMessage();
+            this.enableSubmitButton();
+        }
+    }
 }
 
 
@@ -74,17 +85,6 @@ export class FormOrderView extends FormView{
     setAddress(value: string) {
         this.addressInputNode.value = value;
     }
-
-    checkAddress(errors: TCustomerErrors) {
-        const errorList: string[] = Object.values(errors);
-        if (errorList.length > 0) {
-            this.outputErrorMessage(errorList.join(', '));
-            this.disableSubmitButton();
-        } else {
-            this.clearErrorMessage();
-            this.enableSubmitButton();
-        }
-    }
 }
 
 
@@ -116,18 +116,6 @@ export class FormContactsView extends FormView{
     }
     setPhone(value: string) {
         this.phoneInputNode.value = value;
-    }
-
-    checkContacts(errors: TCustomerErrors) {
-        const errorList: string[] = Object.values(errors);
-        if (errorList.length > 0) {
-            const mess = errorList.join(', ')
-            this.outputErrorMessage(mess);
-            this.disableSubmitButton();
-        } else {
-            this.clearErrorMessage();
-            this.enableSubmitButton();
-        }
     }
 }
 
