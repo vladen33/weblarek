@@ -2,8 +2,6 @@ import { Component } from "../base/Component.ts";
 import { ensureElement } from '../../utils/utils.ts';
 import { CDN_URL } from "../../utils/constants.ts";
 import { IEvents } from '../base/Events.ts';
-import { IProduct } from '../../types';
-
 
 
 export abstract class CardBaseView extends Component<T>{

@@ -11,7 +11,7 @@ import {ModalView} from "./components/views/ModalView.ts";
 import {CardBasketView, CardCatalogView, CardPreviewView} from "./components/views/CardView.ts";
 import {EventEmitter} from './components/base/Events.ts';
 import {BasketView} from "./components/views/BasketView.ts";
-import {ICustomer, IOrderRequest, IProduct} from "./types";
+import {ICustomer, IOrderRequest, IProduct, TCustomerErrors} from "./types";
 import {FormContactsView, FormOrderView, FormSuccessView} from "./components/views/FormView.ts";
 
 const events = new EventEmitter();
@@ -34,6 +34,7 @@ const formSuccessTemplate = ensureElement<HTMLTemplateElement>('#success');
 
 
 const basketView = new BasketView(cloneTemplate(basketTemplate), events);
+const cardPreview = new CardPreviewView(cloneTemplate(cardPreviewTemplate), events);
 const formOrderView = new FormOrderView(cloneTemplate(formOrderTemplate), events);
 const formContactsView = new FormContactsView(cloneTemplate(formContactsTemplate), events);
 const formSuccessView = new FormSuccessView(cloneTemplate(formSuccessTemplate), events);
@@ -67,7 +68,6 @@ events.on('product:show', (event: {product: IProduct}) => {
     if (!event.product) {
         return;
     }
-    const cardPreview = new CardPreviewView(cloneTemplate(cardPreviewTemplate), events);
     modalView.render({content: cardPreview.render(event.product)});
     if (event.product.price === null) {
         cardPreview.setButtonCaptionNotAvailable();
@@ -131,13 +131,21 @@ events.on('customer-model:update', (data: Partial<ICustomer>) => {
 });
 
 events.on('customer-model:has-updated', () => {
-    const customerData = customerModel.getAllCustomerData();
+    const customerData: ICustomer = customerModel.getAllCustomerData();
+    const errors: TCustomerErrors = customerModel.checkErrors();
+    const {payment, address, email, phone} = errors;
+    const orderFormErrors = {};
+    if (payment !== undefined) orderFormErrors.payment = payment;
+    if (address !== undefined) orderFormErrors.address = address;
+    const contactsFormErrors = {};
+    if (email !== undefined) contactsFormErrors.email = email;
+    if (phone !== undefined) contactsFormErrors.phone = phone;
     formOrderView.setPayment(customerData?.payment ?? '');
     formOrderView.setAddress(customerData?.address ?? '');
-    formOrderView.checkFormErrors(customerModel.checkErrors(['payment', 'address']));
+    formOrderView.checkFormErrors(orderFormErrors);
     formContactsView.setEmail(customerData?.email ?? '');
     formContactsView.setPhone(customerData?.phone ?? '');
-    formContactsView.checkFormErrors(customerModel.checkErrors(['email', 'phone']));
+    formContactsView.checkFormErrors(contactsFormErrors);
 });
 
 

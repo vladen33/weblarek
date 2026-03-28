@@ -1,4 +1,4 @@
-import {ICustomer, TCustomerErrors} from '../../types/index';
+import {ICustomer, TCustomerErrors} from '../../types';
 import {IEvents} from "../base/Events.ts";
 
 
@@ -28,20 +28,21 @@ export class Customer {
             email: '',
             phone: ''
         }
+        this.events.emit('customer-model:has-updated');
     }
 
-    checkErrors(checkFields: string[]): TCustomerErrors {
+    checkErrors(): TCustomerErrors {
         const errors: TCustomerErrors = {};
-        if (this.customerData.payment === '' && checkFields.includes('payment')) {
+        if (this.customerData.payment === '') {
             errors.payment = 'Не выбран способ оплаты';
         }
-        if (this.customerData.address.trim() === '' && checkFields.includes('address')) {
+        if (this.customerData.address.trim() === '') {
             errors.address = 'Не указан адрес доставки';
         }
-        if (this.customerData.email.trim() === '' && checkFields.includes('email')) {
+        if (this.customerData.email.trim() === '') {
             errors.email = 'Не указан email-адрес';
         }
-        if (this.customerData.phone.trim() === '' && checkFields.includes('phone')) {
+        if (this.customerData.phone.trim() === '') {
             errors.phone = 'Не указан номер телефона';
         }
         return errors;

@@ -19,7 +19,6 @@ export class BasketView extends Component<IBasketData> {
         this.basketButton.addEventListener('click', (event) => {
             event.stopPropagation();
             this.events.emit('basket:open-order-form');
-            this.events.emit('customer-model:has-updated');
         })
     }
 
